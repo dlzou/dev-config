@@ -80,6 +80,10 @@ return {
     },
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = { disable_netrw = false },
+    config = function(_, opts)
+      require('nvim-tree').setup(opts)
+      require('config.tree-session')
+    end,
   },
   {
     'mbbill/undotree',

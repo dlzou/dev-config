@@ -128,7 +128,9 @@ Diagnostics appear on cursor pause and in Trouble; inline diagnostic text and si
 remain off. Python uses Neovim's native indentation. LSP snippets use `vim.snippet`;
 there is no separate snippet library/source. Undo history persists across restarts
 in Neovim's standard undo directory. Surround, indentation detection, Git tools,
-and Startify sessions retain their roles.
+and Startify sessions retain their roles. On Neovim 0.12, a session-load hook
+restores saved nvim-tree panes in place while preserving editor focus. Sessions
+saved without a tree leave it closed; Neovim 0.13+ uses nvim-tree's built-in restore.
 
 ## Configuration layout and troubleshooting
 
