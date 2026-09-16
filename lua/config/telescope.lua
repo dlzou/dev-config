@@ -1,6 +1,10 @@
 local telescope = require('telescope')
 local actions = require('telescope.actions')
 
+local function ivy(options)
+  return vim.tbl_deep_extend('force', { theme = 'ivy', layout_config = { height = 20 } }, options or {})
+end
+
 telescope.setup {
   defaults = {
     mappings = {
@@ -21,50 +25,16 @@ telescope.setup {
     },
   },
   pickers = {
-    buffers = {
-      theme = 'ivy',
-      layout_config = {
-        height = 20,
-      },
+    buffers = ivy({
       show_all_buffers = true,
       sort_lastused = true,
-      mappings = {
-        i = {
-          ['<C-c>'] = 'delete_buffer',
-        },
-      },
-    },
-    commands = {
-      theme = 'ivy',
-      layout_config = {
-        height = 20,
-      },
-    },
-    find_files = {
-      theme = 'ivy',
-      layout_config = {
-        height = 20,
-      },
-      find_command = {'rg', '--files', '--hidden', '-g', '!.git/'}
-    },
-    live_grep = {
-      theme = 'ivy',
-      layout_config = {
-        height = 20,
-      },
-    },
-    lsp_definitions = {
-      theme = 'ivy',
-      layout_config = {
-        height = 20,
-      },
-    },
-    lsp_workspace_symbols = {
-      theme = 'ivy',
-      layout_config = {
-        height = 20,
-      },
-    },
+      mappings = { i = { ['<C-c>'] = 'delete_buffer' } },
+    }),
+    commands = ivy(),
+    find_files = ivy({ find_command = { 'rg', '--files', '--hidden', '-g', '!.git/' } }),
+    live_grep = ivy(),
+    lsp_definitions = ivy(),
+    lsp_workspace_symbols = ivy(),
   },
   extensions = {
     fzf = {
