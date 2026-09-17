@@ -11,7 +11,7 @@ evaluation on macOS does not verify Linux builds or shell/runtime behavior.
 2. Check `uname -m`: the helper selects `ubuntu` for x86_64 and `ubuntu-arm64` for
    aarch64/arm64. It detects the current username, home, and checkout path.
 3. Back up the shell startup files you will edit and any existing Neovim, Starship,
-   and user Nix configuration. Keep those backups outside the repository. Preserve
+   Ghostty, and user Nix configuration. Keep those backups outside the repository. Preserve
    aliases, SSH-agent/proxy/certificate setup, Conda, and work-tool initialization.
 4. Inspect `type -a nvim fd fzf uv clangd` in an ordinary terminal. Look for manual
    binaries in `~/bin`, Snap/apt installations, and apt-specific fzf sourcing under
@@ -40,7 +40,8 @@ throughout validation.
    generated integration last. Keep work-tool and Conda initialization local.
 3. Open a fresh terminal. Run `./scripts/verify-tools.sh` from the checkout and
    repeat `type -a` for the migrated tools. Check fzf's Ctrl-R/Ctrl-T, Starship
-   symbols with a Nerd Font, tmux, and existing work commands. Confirm Git/SSH and
+   symbols with a Nerd Font, tmux, and existing work commands. If using Ghostty,
+   install it separately (1.2.3+) and validate/reload its shared configuration. Confirm Git/SSH and
    corporate-network workflows still use the intended local settings.
 4. Open Neovim and let plugin/parser installation complete. Check dependency
    health, Telescope, Yazi, and native plugin builds. Confirm basedpyright/Ruff

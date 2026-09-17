@@ -1,6 +1,6 @@
 # Personal development configuration
 
-CLI tools, Neovim, and Starship settings for Apple Silicon macOS and Ubuntu
+CLI tools, Neovim, Starship, and Ghostty settings for Apple Silicon macOS and Ubuntu
 (x86_64 or ARM64). Nix supplies external executables; standalone Home Manager
 installs the personal profile and links configuration files to this checkout.
 Neovim's lazy.nvim manages plugins separately.
@@ -21,6 +21,7 @@ Ubuntu coverage, and [Neovim documentation](nvim/README.md) for editor shortcuts
 | `nix/packages.nix` | Shared external tools and minimum editor dependency versions |
 | `nvim/` | Writable Lua configuration and `lazy-lock.json` |
 | `starship.toml` | Writable prompt settings in native TOML |
+| `ghostty/config.ghostty` | Writable Ghostty terminal settings |
 | `scripts/setup-home.sh` | Build and activate the current platform's profile |
 | `scripts/verify-tools.sh` | Check that the shell selects Nix-managed tools |
 | `scripts/setup-macos.sh` | Optional Homebrew fallback for editor dependencies |
@@ -48,7 +49,7 @@ The setup script detects its own checkout location. No username or checkout-path
 changes are needed in the Nix files. The SSH clone URL requires GitHub SSH access;
 the equivalent HTTPS URL is `https://github.com/dlzou/dev-config.git`.
 
-Before activation, back up existing Neovim and Starship configurations and the
+Before activation, back up existing Neovim, Starship, and Ghostty configurations and the
 shell startup files you will edit. Move an existing `~/.config/nvim` directory
 aside rather than replacing it in place. The setup helper backs up conflicting
 files with a `.before-dev-config` suffix; an existing backup can block activation.
@@ -152,15 +153,37 @@ and Neovim icons.
 | Packages, fzf options, or generated shell integration | Edit the Nix files, run `--switch`, and open a fresh terminal for shell changes |
 | Neovim settings | Edit `nvim/`; restart Neovim or reload the relevant Lua module |
 | Starship prompt | Edit `starship.toml`; subsequent prompt renders use the changes |
+| Ghostty terminal | Edit `ghostty/config.ghostty`; reload Ghostty configuration |
 
-Home Manager links the Neovim directory and Starship TOML directly to the writable
-checkout. Do not edit the generated `dev-config/shell.sh`; its source is `home.nix`.
+Home Manager links the Neovim directory, Starship TOML, and Ghostty configuration
+directly to the writable checkout. Do not edit the generated `dev-config/shell.sh`; its source is `home.nix`.
 An explicit `STARSHIP_CONFIG` environment variable overrides Starship's normal
 config path; remove or adjust it if you want the managed file to take effect.
 
 After moving the checkout, run `./scripts/setup-home.sh --switch` from the new
-location to update both links. Until then they point to the old location. Shell
+location to update the configuration links. Until then they point to the old location. Shell
 startup files continue to source the integration in the configured XDG directory.
+
+## Ghostty terminal
+
+Home Manager links `ghostty/config.ghostty` to the Ghostty configuration directory
+under `xdg.configHome` (normally `~/.config/ghostty/config.ghostty`). The shared
+settings select Monokai Classic and enable `ssh-env`/`ssh-terminfo` shell
+integration features. The Ghostty application is installed separately through
+your existing application/package manager; it is not included in this Nix profile.
+
+This filename requires Ghostty 1.2.3 or newer. Edit the checkout file and reload
+with **Cmd-Shift-,** on macOS or **Ctrl-Shift-,** on Linux. A Home Manager switch
+is only needed when changing the link declaration or checkout location. Some
+Ghostty settings require a new terminal or application restart to take effect.
+
+On macOS, files under `~/Library/Application Support/com.mitchellh.ghostty/` load
+after the XDG configuration and can override it. Keep shared settings in the
+checkout; check other config files if an edit appears to have no effect. See
+[Ghostty configuration](https://ghostty.org/docs/config) for file precedence and
+reload behavior. Use `ghostty +validate-config` to check the effective config;
+if the CLI is not on PATH on macOS, use
+`/Applications/Ghostty.app/Contents/MacOS/ghostty +validate-config`.
 
 ## Neovim and Python projects
 
@@ -251,5 +274,5 @@ for compatibility. It does not install the full personal CLI profile or change
 PATH. To upgrade a particular formula deliberately, use `brew upgrade <formula>`.
 
 Without Home Manager, link `~/.config/nvim` to the checkout's `nvim/` directory
-after backing up the existing configuration. Starship's link and shell integration
-must also be arranged separately if desired.
+after backing up the existing configuration. Starship/Ghostty links and shell
+integration must also be arranged separately if desired.

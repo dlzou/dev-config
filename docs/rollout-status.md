@@ -11,7 +11,7 @@ guarantee for later dependency updates.
 
 ## Current setup
 
-- The active Mac checkout is `~/dev-config`. Neovim and Starship use writable
+- The active Mac checkout is `~/dev-config`. Neovim, Starship, and Ghostty use writable
   Home Manager links into that checkout. Moving it requires another `--switch`.
 - Home Manager manages packages, selected config links, fzf options, and generated
   shell integration. Bash/Zsh startup files, Conda, credentials, and work tools
@@ -28,6 +28,9 @@ guarantee for later dependency updates.
   relocation passed. Fresh shells select the expected Nix executables.
 - fzf bindings/default options and Starship prompt hooks work. Starship renders
   from the writable TOML link, with the original settings preserved.
+- Ghostty configuration validates and resolves to the writable checkout link.
+  Effective settings are unchanged; the original config is backed up with
+  `.before-dev-config`. Ghostty itself remains separately installed.
 - Neovim starts and its dependency health check passes. Python attaches basedpyright
   and Ruff; C++ attaches clangd. Manual Ruff formatting works without format-on-save.
 - Telescope opens and its native sorter builds/loads. A Python Treesitter parser

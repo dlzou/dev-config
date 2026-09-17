@@ -84,8 +84,8 @@ project's dependencies. Debugging and Go integrations are not configured.
 `loctvl842/monokai-pro.nvim` uses its classic filter and the `monokai-pro-classic`
 colorscheme, with a matching Lualine theme. Main background (`#272822`) and foreground
 (`#fdfff1`) come from the plugin's classic palette. Floating windows and sidebars
-can use darker shades. Terminal themes, including Ghostty's, are configured
-separately from this repository.
+can use darker shades. Ghostty's terminal settings live separately in
+`../ghostty/config.ghostty`, which also selects Monokai Classic.
 
 ## Keys and behavior
 

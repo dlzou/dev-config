@@ -22,6 +22,8 @@
   xdg.configFile."nvim".source = config.lib.file.mkOutOfStoreSymlink "${checkout}/nvim";
   xdg.configFile."starship.toml".source =
     config.lib.file.mkOutOfStoreSymlink "${checkout}/starship.toml";
+  xdg.configFile."ghostty/config.ghostty".source =
+    config.lib.file.mkOutOfStoreSymlink "${checkout}/ghostty/config.ghostty";
   xdg.configFile."nix/nix.conf".text = ''
     experimental-features = nix-command flakes
   '';
@@ -55,7 +57,9 @@
   '';
 
   home.activation.checkDevConfigCheckout = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
-    for file in ${lib.escapeShellArg "${checkout}/nvim/init.lua"} ${lib.escapeShellArg "${checkout}/starship.toml"}; do
+    for file in ${lib.escapeShellArg "${checkout}/nvim/init.lua"} \
+      ${lib.escapeShellArg "${checkout}/starship.toml"} \
+      ${lib.escapeShellArg "${checkout}/ghostty/config.ghostty"}; do
       if [ ! -f "$file" ]; then
         echo "Missing $file; rerun scripts/setup-home.sh from the current checkout location." >&2
         exit 1
