@@ -1,6 +1,6 @@
 # Neovim configuration
 
-Neovim 0.12+ with classic Monokai and Python/C++ language support.
+Neovim 0.12+ with Python/C++ language support.
 Configuration is Lua; lazy.nvim manages plugins pinned in `lazy-lock.json`.
 
 ## Setup
@@ -8,11 +8,6 @@ Configuration is Lua; lazy.nvim manages plugins pinned in `lazy-lock.json`.
 This directory is the Neovim part of the personal development configuration.
 Follow the [repository setup instructions](../README.md) to install the shared
 Nix/Home Manager profile and link `~/.config/nvim` to this checkout directory.
-The optional Homebrew installer is `../scripts/setup-macos.sh`.
-
-External executables come from Nix (or the Homebrew fallback); Mason is not used.
-Project dependencies and Python virtual environments remain separate. The Lua
-configuration and plugin lockfile stay writable in the checkout.
 
 ### First launch and updates
 
@@ -29,34 +24,18 @@ a buffer opened before its parser was installed may not yet have highlighting.
 - `:Lazy clean` removes cached plugins no longer used by this configuration.
 - `:TSUpdate` updates syntax parsers. Parsers follow nvim-treesitter's definitions;
   their compiled artifacts are local to each machine.
-- For Nix-managed external tools, run `nix flake update` from the repository root,
-  review `flake.lock`, then build and apply with `scripts/setup-home.sh`. For the
-  Homebrew fallback, explicitly use `brew upgrade <formula>`.
+- For external tools, see the repository's [update procedure](../README.md#updates)
+  and [minimum versions](../README.md#configuration-files).
 
-Required minimums: Neovim 0.12.0, tree-sitter CLI 0.26.1, and Ruff 0.5.3 (native
-server support for the pinned LSP configuration). `fd` is included as a useful
-standalone utility; Telescope continues to use `rg`, so missing fd is only a warning.
+Telescope uses `rg`; missing `fd` produces only a health-check warning.
 
 ### Plugin loading
 
-Telescope, Diffview, Trouble, Undotree, and Yazi load when you use their commands
-or configured shortcuts. Completion (`nvim-cmp`), its buffer source, and autopairs
-load on the first `InsertEnter` event. The lightweight LSP completion capability
-setup remains available at startup so language servers advertise snippet support.
-Completion still requires Tab; entering insert mode does not request suggestions.
-
-The theme/status line, Startify, Treesitter, LSP setup, Git signs/Fugitive,
-indentation tools, surround, conflict highlighting, and word illumination load at
-startup. `:Lazy profile` shows plugin timings; deferred loading moves work to first
-use rather than eliminating it.
+Telescope, Diffview, Trouble, Undotree, and Yazi load on their commands or
+shortcuts. Completion and autopairs load when you first enter insert mode;
+press Tab to request completion. Use `:Lazy profile` to inspect plugin timings.
 
 ## Language support
-
-Neovim's Python remote-plugin host is disabled in `init.lua`; the pinned Nix
-package wrapper also disables it. Python editing, native indentation, basedpyright,
-and Ruff do not require this host. Enabling Python remote plugins or `:python3`
-would require a provider-enabled Neovim package and a Python host with `pynvim`,
-as well as removing the Lua disable setting.
 
 **Python:** basedpyright provides completion, navigation, signature help, and type
 checking. Its defaults are `standard` checking and `openFilesOnly` diagnostics.
@@ -77,15 +56,12 @@ and [Ruff's Neovim setup](https://docs.astral.sh/ruff/editors/setup/).
 
 **C/C++:** clangd runs from PATH. Generate `compile_commands.json` in the project
 for accurate include paths and build flags. Language servers do not install your
-project's dependencies. Debugging and Go integrations are not configured.
+project's dependencies.
 
 ## Appearance
 
-`loctvl842/monokai-pro.nvim` uses its classic filter and the `monokai-pro-classic`
-colorscheme, with a matching Lualine theme. Main background (`#272822`) and foreground
-(`#fdfff1`) come from the plugin's classic palette. Floating windows and sidebars
-can use darker shades. Ghostty's terminal settings live separately in
-`../ghostty/config.ghostty`, which also selects Monokai Classic.
+The theme is `monokai-pro-classic`. Change its setup and the Lualine theme in
+[lua/plugins.lua](lua/plugins.lua).
 
 ## Keys and behavior
 
@@ -115,10 +91,9 @@ Incomplete mapped sequences time out after 750 ms. Completion stays manual.
 | Ctrl-V in insert/command mode | Paste from system clipboard |
 
 Diagnostics appear on cursor pause and in Trouble; inline diagnostic text and signs
-remain off. Python uses Neovim's native indentation. LSP snippets use `vim.snippet`;
-there is no separate snippet library/source. Undo history persists across restarts
-in Neovim's standard undo directory. Surround, indentation detection, Git tools,
-and Startify sessions are enabled.
+remain off. Python uses Neovim's native indentation; LSP snippets use `vim.snippet`.
+Undo history persists across restarts in Neovim's standard undo directory.
+Surround, indentation detection, Git tools, and Startify sessions are enabled.
 
 ## Telescope layout
 
@@ -133,8 +108,7 @@ Esc closes the picker.
 [yazi.nvim](https://github.com/mikavilpas/yazi.nvim) opens the installed Yazi executable
 in a floating terminal at 80% of the editor size. It loads on `Space fy` or `:Yazi`.
 Directory arguments such as `nvim .` use Neovim's built-in netrw browser; press
-`Space fy` to open Yazi. Yazi stays unloaded until requested. Telescope file/text
-pickers remain available on `Space ff` and `Space fg`.
+`Space fy` to open Yazi.
 
 Inside Yazi:
 
@@ -151,16 +125,14 @@ Inside Yazi:
 
 `:Yazi cwd` starts at Neovim's working directory; `:Yazi toggle` resumes the previous
 Yazi location. Browsing does not change Neovim's working directory. Ctrl-S uses the
-existing Telescope flex layout and its 80% width/height settings. To leave terminal
-mode while keeping Yazi open, use Neovim's native `Ctrl-\` then `Ctrl-N` sequence.
+[Telescope layout](#telescope-layout). To leave terminal mode while keeping Yazi
+open, use Neovim's native `Ctrl-\` then `Ctrl-N` sequence.
 Ctrl-G closes Yazi or Telescope in either input or normal mode; in a regular
 terminal it returns to normal mode with the shell still running (press `i` to resume).
 
 Yazi and `ya` are installed together and should have matching versions. Run
 `:checkhealth yazi` for integration checks after opening Yazi once to load the
-plugin. Optional grug-far replacement, Snacks window picking, and GNU-realpath-based
-relative-path copying shortcuts are disabled.
-Additional preview/search helpers for standalone Yazi are optional; see the
+plugin. For standalone preview/search helpers, see the
 [Yazi installation guide](https://yazi-rs.github.io/docs/installation/).
 
 ## Configuration layout and troubleshooting
@@ -175,6 +147,14 @@ parser/query startup errors. Reopen the buffer after installation; use `:TSUpdat
 if an installed parser is incompatible. Missing executable/version failures include
 setup instructions in `:checkhealth userconfig`. Check PATH inside the terminal
 where you launch Neovim, especially after entering a Nix shell or activating a venv.
+
+### Python remote-plugin host
+
+Neovim's Python remote-plugin host is disabled in `init.lua`; the pinned Nix
+package wrapper also disables it. Python editing, native indentation, basedpyright,
+and Ruff do not require this host. Enabling Python remote plugins or `:python3`
+would require a provider-enabled Neovim package and a Python host with `pynvim`,
+as well as removing the Lua disable setting.
 
 ### Startup timing
 

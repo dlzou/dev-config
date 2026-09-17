@@ -2,8 +2,7 @@ local M = {}
 
 function M.check()
   local health = vim.health
-  local setup = 'From your dev-config checkout, run ./scripts/setup-home.sh --switch, source the shell integration, and open a fresh terminal. '
-    .. 'On macOS, the optional Homebrew fallback is ./scripts/setup-macos.sh from that checkout.'
+  local setup = 'From your dev-config checkout, run ./scripts/setup-home.sh --switch, source the shell integration, and open a fresh terminal.'
   health.start('Neovim configuration dependencies')
   if vim.fn.has('nvim-0.12') == 1 then
     health.ok('Neovim ' .. tostring(vim.version()))

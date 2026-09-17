@@ -9,17 +9,6 @@ guarantee for later dependency updates.
 | x86_64 Ubuntu | Passed | Pending | Pending |
 | ARM64 Ubuntu | Passed | Pending | Pending |
 
-## Current setup
-
-- The active Mac checkout is `~/dev-config`. Neovim, Starship, and Ghostty use writable
-  Home Manager links into that checkout. Moving it requires another `--switch`.
-- Home Manager manages packages, selected config links, fzf options, and generated
-  shell integration. Bash/Zsh startup files, Conda, credentials, and work tools
-  remain locally managed.
-- Nixpkgs/Home Manager inputs are pinned in `flake.lock`; plugins are pinned in
-  `nvim/lazy-lock.json`. The configuration does not install Mason or enable Linux
-  GPU integration. Legacy package installations have not been removed.
-
 ## Passed checks
 
 - All three Home Manager profiles evaluate; flake checks pass for all declared
@@ -27,10 +16,7 @@ guarantee for later dependency updates.
 - Mac build, activation, repeat activation, and activation after checkout
   relocation passed. Fresh shells select the expected Nix executables.
 - fzf bindings/default options and Starship prompt hooks work. Starship renders
-  from the writable TOML link, with the original settings preserved.
-- Ghostty configuration validates and resolves to the writable checkout link.
-  Effective settings are unchanged; the original config is backed up with
-  `.before-dev-config`. Ghostty itself remains separately installed.
+  from the writable TOML link; Ghostty's linked configuration validates.
 - Neovim starts and its dependency health check passes. Python attaches basedpyright
   and Ruff; C++ attaches clangd. Manual Ruff formatting works without format-on-save.
 - Telescope opens and its native sorter builds/loads. A Python Treesitter parser
@@ -40,7 +26,7 @@ guarantee for later dependency updates.
 - Alternate usernames, checkout paths, and XDG paths were evaluated. Paths with
   spaces and Bash/Zsh integration were checked; a project shell's PATH is preserved.
 - Shell syntax, local documentation links, ignore rules, and Git whitespace checks
-  pass. The moved Neovim files preserve the prior code except updated health hints.
+  pass.
 
 ## Remaining coverage
 
@@ -54,6 +40,5 @@ guarantee for later dependency updates.
   not been reproduced reliably. Controlled warm-start measurements do not rule
   them out. The [editor guide](../nvim/README.md#startup-timing) explains capture.
 
-Private shell/config backups remain outside this repository under
-`~/.local/state/dev-config/backups/`; Home Manager also preserves displaced files
-with `.before-dev-config`. Do not include backup contents in Git.
+Mac migration backups are stored under `~/.local/state/dev-config/backups/`.
+See [recovery instructions](../README.md#troubleshooting-and-recovery).
