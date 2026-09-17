@@ -2,9 +2,8 @@ local M = {}
 
 function M.check()
   local health = vim.health
-  local setup = vim.fn.has('mac') == 1
-      and 'Run ~/.config/nvim/scripts/setup-macos.sh; ensure Homebrew and Xcode Command Line Tools are on PATH.'
-    or 'Enter the development shell with nix develop path:$HOME/.config/nvim, then start nvim in that shell.'
+  local setup = 'From your dev-config checkout, run ./scripts/setup-home.sh --switch, source the shell integration, and open a fresh terminal. '
+    .. 'On macOS, the optional Homebrew fallback is ./scripts/setup-macos.sh from that checkout.'
   health.start('Neovim configuration dependencies')
   if vim.fn.has('nvim-0.12') == 1 then
     health.ok('Neovim ' .. tostring(vim.version()))

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 fail() { printf '%s\n' "$*" >&2; exit 1; }
-[[ "$(uname -s)" == Darwin ]] || fail 'This script is for macOS. On Linux, use the Nix development shell.'
+[[ "$(uname -s)" == Darwin ]] || fail 'This script is for macOS. On Linux, use scripts/setup-home.sh or the optional Nix development shell.'
 command -v brew >/dev/null || fail 'Install Homebrew from https://brew.sh, then add its shellenv to your shell configuration.'
 xcode-select -p >/dev/null 2>&1 || fail 'Install Xcode Command Line Tools with: xcode-select --install'
 for executable in git make cc clangd curl tar file; do

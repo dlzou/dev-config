@@ -1,1 +1,18 @@
+# Nix build output links and local direnv state
+/result
+/result-*
+.direnv/
+
+# Optional lazy.nvim LuaRocks environments
 /lazy-rocks/
+/nvim/lazy-rocks/
+
+# macOS metadata
+.DS_Store
+._*
+
+# Editor temporary files and migration backups
+*.swp
+*.swo
+*~
+*.before-dev-config
