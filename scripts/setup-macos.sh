@@ -5,7 +5,7 @@ fail() { printf '%s\n' "$*" >&2; exit 1; }
 [[ "$(uname -s)" == Darwin ]] || fail 'This script is for macOS. On Linux, use the Nix development shell.'
 command -v brew >/dev/null || fail 'Install Homebrew from https://brew.sh, then add its shellenv to your shell configuration.'
 xcode-select -p >/dev/null 2>&1 || fail 'Install Xcode Command Line Tools with: xcode-select --install'
-for executable in git make cc clangd curl tar; do
+for executable in git make cc clangd curl tar file; do
   command -v "$executable" >/dev/null || fail "Missing $executable. Check Xcode Command Line Tools and PATH."
 done
 xcrun --find clang >/dev/null 2>&1 || fail 'Xcode Command Line Tools are unavailable. Run: xcode-select --install'
@@ -54,6 +54,8 @@ ensure_tool basedpyright basedpyright
 ensure_tool ruff ruff 0.5.3
 ensure_tool ripgrep rg
 ensure_tool fd fd
+ensure_tool yazi yazi
+ensure_tool yazi ya
 ensure_tool tree-sitter-cli tree-sitter 0.26.1
 command -v basedpyright-langserver >/dev/null || fail 'basedpyright-langserver is missing; check the basedpyright installation and PATH.'
 printf '\nDependencies ready. Start nvim, then run :checkhealth userconfig.\n'

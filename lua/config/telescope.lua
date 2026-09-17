@@ -20,8 +20,11 @@ telescope.setup {
     mappings = {
       i = {
         ['<Esc>'] = actions.close,
+        -- Do not wait for vim-surround's global Ctrl-G s/S sequences.
+        ['<C-g>'] = { actions.close, type = 'action', opts = { nowait = true } },
         ['<C-c>'] = false,
       },
+      n = { ['<C-g>'] = { actions.close, type = 'action', opts = { nowait = true } } },
     },
     vimgrep_arguments = {
       "rg",

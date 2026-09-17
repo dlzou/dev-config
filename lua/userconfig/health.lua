@@ -16,6 +16,7 @@ function M.check()
     { 'basedpyright' }, { 'basedpyright-langserver', check_version = false },
     { 'ruff', minimum = '0.5.3' }, { 'clangd' },
     { 'rg' }, { 'fd', optional = true }, { 'tree-sitter', minimum = '0.26.1' },
+    { 'yazi' }, { 'ya' }, { 'file' },
     { 'git' }, { 'make' }, { 'cc' }, { 'curl' }, { 'tar' },
   }
   for _, dependency in ipairs(dependencies) do

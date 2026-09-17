@@ -19,7 +19,7 @@ for lhs, rhs in pairs({
 }) do
   map('i', lhs, rhs)
 end
-map('t', '<Esc>', '<C-\\><C-n>')
+map('t', '<C-g>', '<C-\\><C-n>', { desc = 'Leave terminal input mode' })
 -- Preserve the old backslash prefix alongside Space.
 map('n', '\\', '<Space>', { remap = true })
 

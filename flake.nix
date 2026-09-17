@@ -18,7 +18,7 @@
             pkgs.mkShell {
               packages = with pkgs; [
                 neovim basedpyright ruff clang-tools
-                ripgrep fd tree-sitter
+                ripgrep fd tree-sitter yazi file
                 git gnumake gcc curl gnutar gzip unzip
               ];
             };

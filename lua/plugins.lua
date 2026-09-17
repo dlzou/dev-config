@@ -59,7 +59,8 @@ return {
   'tpope/vim-sleuth',
   {
     'nvim-telescope/telescope.nvim',
-    lazy = false,
+    lazy = true,
+    cmd = 'Telescope',
     keys = {
       { '<leader>c', '<cmd>Telescope commands<CR>', silent = true, desc = 'Commands' },
       { '<leader>fb', '<cmd>Telescope buffers<CR>', silent = true, desc = 'Buffers' },
@@ -73,21 +74,41 @@ return {
     config = function() require('config.telescope') end,
   },
   {
-    'nvim-tree/nvim-tree.lua',
-    lazy = false,
+    'mikavilpas/yazi.nvim',
+    version = '*',
+    cmd = 'Yazi',
     keys = {
-      { '<leader>ft', '<cmd>NvimTreeToggle<CR>', silent = true, desc = 'File tree' },
+      { '<leader>fy', '<cmd>Yazi<CR>', silent = true, desc = 'Yazi file browser' },
     },
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    opts = { disable_netrw = false },
-    config = function(_, opts)
-      require('nvim-tree').setup(opts)
-      require('config.tree-session')
-    end,
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = {
+      open_for_directories = false,
+      floating_window_scaling_factor = 0.8,
+      integrations = {
+        grep_in_directory = 'telescope',
+        grep_in_selected_files = 'telescope',
+      },
+      keymaps = {
+        -- These optional actions need grug-far, snacks.picker, or GNU realpath.
+        replace_in_directory = false,
+        open_and_pick_window = false,
+        copy_relative_path_to_selected_files = false,
+      },
+      hooks = {
+        on_yazi_ready = vim.schedule_wrap(function(buffer, _, api)
+          if not vim.api.nvim_buf_is_valid(buffer) then return end
+          -- Quit through Yazi so its normal cleanup and focus restoration run.
+          vim.keymap.set({ 't', 'n' }, '<C-g>', function()
+            api:emit_to_yazi({ 'quit' })
+          end, { buffer = buffer, desc = 'Close Yazi' })
+        end),
+      },
+    },
   },
   {
     'mbbill/undotree',
-    lazy = false,
+    lazy = true,
+    cmd = { 'UndotreeToggle', 'UndotreeShow', 'UndotreeHide', 'UndotreeFocus', 'UndotreePersistUndo' },
     keys = {
       { '<leader>u', '<cmd>UndotreeToggle<CR>', silent = true, desc = 'Undo tree' },
     },
@@ -108,7 +129,11 @@ return {
   },
   {
     'sindrets/diffview.nvim',
-    lazy = false,
+    lazy = true,
+    cmd = {
+      'DiffviewOpen', 'DiffviewFileHistory', 'DiffviewClose', 'DiffviewFocusFiles',
+      'DiffviewToggleFiles', 'DiffviewRefresh', 'DiffviewLog',
+    },
     keys = {
       { '<leader>gv', '<cmd>DiffviewOpen<CR>', silent = true, desc = 'Git diff view' },
     },
@@ -122,6 +147,8 @@ return {
   },
   {
     'hrsh7th/nvim-cmp',
+    lazy = true,
+    event = 'InsertEnter',
     dependencies = {
       'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer',
       { 'windwp/nvim-autopairs', opts = {} },
@@ -132,5 +159,11 @@ return {
     'RRethy/vim-illuminate',
     config = function() require('illuminate').configure({ delay = 200 }) end,
   },
-  { 'folke/trouble.nvim', dependencies = { 'nvim-tree/nvim-web-devicons' }, opts = {} },
+  {
+    'folke/trouble.nvim',
+    lazy = true,
+    cmd = 'Trouble',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {},
+  },
 }
