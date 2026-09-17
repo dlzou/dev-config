@@ -40,13 +40,13 @@ pinned independently in `nvim/lazy-lock.json`. Mason is not used.
 Choose any checkout location; these examples use `~/dev-config`:
 
 ```sh
-git clone git@github.com:dlzou/nvim-config.git ~/dev-config
+git clone git@github.com:dlzou/dev-config.git ~/dev-config
 cd ~/dev-config
 ```
 
 The setup script detects its own checkout location. No username or checkout-path
 changes are needed in the Nix files. The SSH clone URL requires GitHub SSH access;
-the equivalent HTTPS URL is `https://github.com/dlzou/nvim-config.git`.
+the equivalent HTTPS URL is `https://github.com/dlzou/dev-config.git`.
 
 Before activation, back up existing Neovim and Starship configurations and the
 shell startup files you will edit. Move an existing `~/.config/nvim` directory
