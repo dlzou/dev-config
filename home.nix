@@ -1,4 +1,8 @@
-{ config, lib, pkgs, checkout, ... }: {
+{ config, lib, pkgs, checkout, ... }:
+let
+  ghosttyPlatform = if pkgs.stdenv.hostPlatform.isDarwin then "macos" else "ubuntu";
+  ghosttyPlatformConfig = "${checkout}/ghostty/${ghosttyPlatform}.ghostty";
+in {
   # Compatibility baseline for Home Manager defaults; don't bump on routine updates.
   home.stateVersion = "26.05";
   home.packages = import ./nix/packages.nix { inherit pkgs; };
@@ -22,8 +26,11 @@
   xdg.configFile."nvim".source = config.lib.file.mkOutOfStoreSymlink "${checkout}/nvim";
   xdg.configFile."starship.toml".source =
     config.lib.file.mkOutOfStoreSymlink "${checkout}/starship.toml";
-  xdg.configFile."ghostty/config.ghostty".source =
-    config.lib.file.mkOutOfStoreSymlink "${checkout}/ghostty/config.ghostty";
+  # Load shared settings first, then the platform overrides, directly from the checkout.
+  xdg.configFile."ghostty/config.ghostty".text = ''
+    config-file = "${checkout}/ghostty/config.ghostty"
+    config-file = "${ghosttyPlatformConfig}"
+  '';
   xdg.configFile."nix/nix.conf".text = ''
     experimental-features = nix-command flakes
   '';
@@ -59,7 +66,8 @@
   home.activation.checkDevConfigCheckout = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
     for file in ${lib.escapeShellArg "${checkout}/nvim/init.lua"} \
       ${lib.escapeShellArg "${checkout}/starship.toml"} \
-      ${lib.escapeShellArg "${checkout}/ghostty/config.ghostty"}; do
+      ${lib.escapeShellArg "${checkout}/ghostty/config.ghostty"} \
+      ${lib.escapeShellArg ghosttyPlatformConfig}; do
       if [ ! -f "$file" ]; then
         echo "Missing $file; rerun scripts/setup-home.sh from the current checkout location." >&2
         exit 1

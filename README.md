@@ -21,7 +21,7 @@ Ubuntu coverage, and [Neovim documentation](nvim/README.md) for editor shortcuts
 | `nix/packages.nix` | Shared external tools and minimum editor dependency versions |
 | `nvim/` | Writable Lua configuration and `lazy-lock.json` |
 | `starship.toml` | Writable prompt settings in native TOML |
-| `ghostty/config.ghostty` | Writable Ghostty terminal settings |
+| `ghostty/*.ghostty` | Writable shared settings and macOS/Ubuntu overrides |
 | `scripts/setup-home.sh` | Build and activate the current platform's profile |
 | `scripts/verify-tools.sh` | Check Nix-managed tools and the external C/C++ compiler |
 
@@ -175,26 +175,35 @@ and Neovim icons.
 | Packages, fzf options, or generated shell integration | Edit the Nix files, run `--switch`, and open a fresh terminal for shell changes |
 | Neovim settings | Edit `nvim/`; restart Neovim or reload the relevant Lua module |
 | Starship prompt | Edit `starship.toml`; subsequent prompt renders use the changes |
-| Ghostty terminal | Edit `ghostty/config.ghostty`; reload Ghostty configuration |
+| Ghostty terminal | Edit the shared or platform file in `ghostty/`; reload Ghostty configuration |
 
-Home Manager links the Neovim directory, Starship TOML, and Ghostty configuration
-directly to the writable checkout. Edit the generated shell integration through
-its source in `home.nix`.
+Home Manager links the Neovim directory and Starship TOML directly to the writable
+checkout. Ghostty's generated entry file loads its shared and platform settings
+from the checkout. Edit generated files through their source in `home.nix`.
 An explicit `STARSHIP_CONFIG` environment variable overrides Starship's normal
 config path; remove or adjust it if you want the managed file to take effect.
 
 After moving the checkout, run `./scripts/setup-home.sh --switch` from the new
-location to update the configuration links. Until then they point to the old
-location; the shell integration source path stays the same.
+location to update the configuration links and Ghostty include paths. Until then
+they point to the old location; the shell integration source path stays the same.
 
 ## Ghostty terminal
 
 Install Ghostty separately through your application/package manager. Its managed
-configuration is `~/.config/ghostty/config.ghostty` (or under a custom
-`xdg.configHome`); this filename requires Ghostty 1.2.3 or newer.
+entry file is `~/.config/ghostty/config.ghostty` (or under a custom
+`xdg.configHome`); this filename requires Ghostty 1.2.3 or newer. Home Manager
+selects the platform file and generates two ordered `config-file` includes:
 
-Edit `ghostty/config.ghostty` in the checkout and reload with **Cmd-Shift-,** on
-macOS or **Ctrl-Shift-,** on Linux. Some settings require a new terminal or restart.
+1. `ghostty/config.ghostty`: shared theme and terminal settings.
+2. `ghostty/macos.ghostty` or `ghostty/ubuntu.ghostty`: platform overrides.
+
+Both Ubuntu architectures use `ubuntu.ghostty`. On Ubuntu, **Ctrl-Shift-Arrows**
+moves between splits; the former **Ctrl-Alt-Arrows** bindings are unbound. macOS
+keeps its default bindings.
+
+Run `./scripts/setup-home.sh --switch` once to install this entry file. Afterward,
+edit the shared or platform file in the checkout and reload with **Cmd-Shift-,**
+on macOS or **Ctrl-Shift-,** on Linux. Some settings require a new terminal or restart.
 See [Editing configuration](#editing-configuration) for link and switch behavior.
 
 On macOS, files under `~/Library/Application Support/com.mitchellh.ghostty/` load

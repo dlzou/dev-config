@@ -2,13 +2,24 @@
 
 Last reviewed: 2026-09-18. These are observed results, not a guarantee for later
 dependency updates. The compiler split is activated and verified on macOS;
-Ubuntu runtime validation remains pending.
+Ubuntu runtime validation remains pending. The newer Ghostty platform-file change
+is built and checked but not yet activated.
 
 | Platform | Configuration evaluation | Build and activation | Runtime checks |
 | --- | --- | --- | --- |
 | Apple Silicon macOS | Passed | Build, activation, and repeat activation passed | Compiler, fresh Zsh, and editor checks passed |
 | x86_64 Ubuntu | Passed | Pending | Pending |
 | ARM64 Ubuntu | Passed | Pending | Pending |
+
+## Ghostty platform configuration (2026-09-18)
+
+- The macOS Home Manager profile builds; all three profiles evaluate and select
+  the expected shared and platform files. Package and plugin locks are unchanged.
+- The macOS Ghostty CLI validates the generated configs. Isolated config checks
+  confirm the shared theme, Ubuntu Ctrl-Shift-Arrow split navigation, removal of
+  Ctrl-Alt-Arrow bindings, and unchanged macOS bindings.
+- Activation of the generated entry file and actual Ubuntu keyboard interaction
+  remain pending. CLI checks on macOS do not validate Linux desktop shortcuts.
 
 ## Compiler split validation (2026-09-18)
 

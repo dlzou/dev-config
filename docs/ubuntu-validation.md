@@ -62,6 +62,8 @@ explicit project activation may intentionally put its tools first on PATH.
    Check fzf's Ctrl-R/Ctrl-T, Starship symbols with a Nerd Font, tmux, and existing work commands. Confirm Git/SSH and
    corporate-network workflows still use the intended local settings. If using
    Ghostty, follow its [installation and configuration checks](../README.md#ghostty-terminal).
+   After switching and reloading Ghostty, check Ctrl-Shift-Arrows in a split layout;
+   Ctrl-Alt-Arrows should no longer move between Ghostty splits.
 3. Open Neovim and let plugin/parser installation complete. Check dependency
    health, Telescope, Yazi, and fresh native plugin/parser builds with the system
    compiler. A cached binary alone does not validate the new compiler selection.
