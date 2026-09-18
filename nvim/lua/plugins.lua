@@ -1,24 +1,26 @@
 return {
   {
-    'loctvl842/monokai-pro.nvim',
+    'folke/tokyonight.nvim',
     priority = 1000,
     config = function()
-      require('monokai-pro').setup({ filter = 'classic', transparent_background = false })
-      vim.cmd.colorscheme('monokai-pro-classic')
+      require('tokyonight').setup({ style = 'moon', transparent = false })
+      vim.cmd.colorscheme('tokyonight-moon')
     end,
   },
   {
     'nvim-lualine/lualine.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons', 'loctvl842/monokai-pro.nvim' },
+    dependencies = { 'nvim-tree/nvim-web-devicons', 'folke/tokyonight.nvim' },
     opts = {
       options = {
-        theme = 'monokai-pro',
-        section_separators = '',
-        component_separators = { left = '|', right = '|' },
+        theme = 'tokyonight-moon',
+        section_separators = { left = '', right = '' },
+        component_separators = '',
       },
       sections = {
+        lualine_a = { 'mode' },
         lualine_b = { 'branch', 'diagnostics' },
         lualine_c = { { 'filename', path = 1, shorting_target = 50 } },
+        lualine_z = { 'location' },
       },
     },
   },

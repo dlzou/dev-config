@@ -1,15 +1,43 @@
 # Validation status
 
-Last reviewed: 2026-09-17. These are observed results for the current setup, not a
-guarantee for later dependency updates.
+Last reviewed: 2026-09-18. These are observed results, not a guarantee for later
+dependency updates. The compiler split is activated and verified on macOS;
+Ubuntu runtime validation remains pending.
 
 | Platform | Configuration evaluation | Build and activation | Runtime checks |
 | --- | --- | --- | --- |
-| Apple Silicon macOS | Passed | Passed | Checks below passed |
+| Apple Silicon macOS | Passed | Build, activation, and repeat activation passed | Compiler, fresh Zsh, and editor checks passed |
 | x86_64 Ubuntu | Passed | Pending | Pending |
 | ARM64 Ubuntu | Passed | Pending | Pending |
 
-## Passed checks
+## Compiler split validation (2026-09-18)
+
+- All three Home Manager profiles and development shells evaluate. The compiler
+  split leaves package/plugin locks unchanged; the separate theme change replaces
+  Monokai with TokyoNight in the plugin lock. The macOS profile builds and exposes
+  no `cc`, `c++`, `clang`, `clang++`, `gcc`, or `g++` executables.
+- With the built profile and system directories on PATH, verification passes and
+  Apple Clang 21.0.0 compiles/runs C and C++ samples. Temporary copies of the locked
+  Telescope native sorter and a fresh Python Treesitter parser build, load, and
+  perform a fuzzy match / syntax parse in Neovim.
+- The optional macOS `nix develop` shell selects Nix Clang 21.1.8 and compiles/runs
+  both samples. It required downloading development outputs from the binary cache;
+  the initial offline attempt lacked those outputs and failed fetching a source.
+- Verifier fixtures cover missing/shadowed tools, missing/failing compilers,
+  compiler symlinks into the Nix store, development-shell selection, and reported
+  `CC`/`CXX` overrides. Health checks cover present dependencies and missing
+  compilers with macOS/Ubuntu-specific guidance.
+- Activation and repeat activation pass. Fresh interactive login Zsh and a
+  non-login Zsh inheriting its login environment pass the tool verifier, select
+  `/usr/bin/cc` and `/usr/bin/c++`, and compile/run C and C++ samples. fzf bindings
+  and options load, and Starship has one prompt hook per shell.
+- Neovim dependency health, TokyoNight/Lualine, and plugin integration checks pass
+  after activation. Neovim, Starship, and Ghostty still link to the checkout.
+- Shell syntax, documentation links, repository-skill validation, and Git
+  whitespace checks pass. No local shell edits or active native plugin artifact
+  replacement was needed.
+
+## Earlier applied-profile checks
 
 - All three Home Manager profiles evaluate; flake checks pass for all declared
   package and development-shell outputs.

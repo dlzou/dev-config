@@ -14,6 +14,8 @@ Nix/Home Manager profile and link `~/.config/nvim` to this checkout directory.
 The first launch downloads lazy.nvim, plugins, and syntax parsers and builds
 Telescope's native sorter. Wait for installation to finish, then reopen Neovim;
 a buffer opened before its parser was installed may not yet have highlighting.
+Native builds use the system C/C++ compiler; see the
+[toolchain prerequisites](../README.md#2-install-nix).
 
 - `:checkhealth userconfig` checks external tools and minimum versions; also use
   `:checkhealth lazy`, `:checkhealth nvim-treesitter`, `:checkhealth vim.lsp`,
@@ -60,7 +62,7 @@ project's dependencies.
 
 ## Appearance
 
-The theme is `monokai-pro-classic`. Change its setup and the Lualine theme in
+The theme is `tokyonight-moon`. Change its setup and the Lualine theme in
 [lua/plugins.lua](lua/plugins.lua).
 
 ## Keys and behavior

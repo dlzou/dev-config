@@ -5,5 +5,5 @@ assert pkgs.lib.versionAtLeast pkgs.ruff.version "0.5.3";
 with pkgs; [
   neovim basedpyright ruff clang-tools tree-sitter yazi
   ripgrep fd fzf jq tmux starship uv
-  git file gnumake stdenv.cc curl gnutar gzip unzip
+  git file gnumake curl gnutar gzip unzip
 ]

@@ -21,7 +21,10 @@ current files before editing:
 Check the working tree and preserve unrelated changes. Keep project Python
 interpreters/dependencies under uv and Neovim plugins under lazy.nvim unless the
 user explicitly requests a broader migration. Ghostty's application is installed
-separately; only its configuration is managed here.
+separately; only its configuration is managed here. The personal profile uses the
+system C/C++ compiler; `stdenv.cc` belongs only to the optional development shell
+in `flake.nix`. Unless changing that ownership explicitly, keep compiler
+prerequisites and verification separate from Nix-managed executable checks.
 
 ## Make the requested change
 

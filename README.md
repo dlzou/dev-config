@@ -23,11 +23,13 @@ Ubuntu coverage, and [Neovim documentation](nvim/README.md) for editor shortcuts
 | `starship.toml` | Writable prompt settings in native TOML |
 | `ghostty/config.ghostty` | Writable Ghostty terminal settings |
 | `scripts/setup-home.sh` | Build and activate the current platform's profile |
-| `scripts/verify-tools.sh` | Check that the shell selects Nix-managed tools |
+| `scripts/verify-tools.sh` | Check Nix-managed tools and the external C/C++ compiler |
 
 The profile includes Neovim, basedpyright, Ruff, clangd, tree-sitter CLI, Yazi,
-ripgrep, fd, fzf, jq, tmux, Starship, and uv. Git, a compiler, Make, file, curl,
-tar, gzip, and unzip support plugin/parser downloads and builds.
+ripgrep, fd, fzf, jq, tmux, Starship, and uv. Git, Make, file, curl, tar, gzip,
+and unzip support plugin/parser downloads and builds. Those builds use the system
+C/C++ compiler: Ubuntu's GCC or macOS Apple Clang. Nix supplies clangd for editor
+support independently of the compiler used to build a project.
 
 The package expression requires Neovim 0.12.0+, tree-sitter CLI 0.26.1+, and
 Ruff 0.5.3+. Exact package sources are pinned in `flake.lock`; plugin revisions are
@@ -81,7 +83,15 @@ sudo sh /tmp/install-nix --daemon
 
 Use `sudo` for this system-wide installation step. Run the Home Manager helper
 below as your normal user, without `sudo`. Open a new terminal after installation.
-On macOS, retain Xcode Command Line Tools for existing Homebrew/work workflows.
+Neovim's native plugin/parser builds also require the system C/C++ toolchain:
+
+- **Ubuntu:** retain the existing compiler; if missing, install `build-essential`
+  with `sudo apt install build-essential`.
+- **macOS:** retain Xcode Command Line Tools; if missing, run `xcode-select --install`.
+
+Check `cc --version` and `c++ --version`. Preserve any project-specific compiler
+requirements and review existing `CC`/`CXX` overrides rather than replacing them
+globally.
 
 ### 3. Build and activate
 
@@ -142,7 +152,10 @@ The integration uses Home Manager's configured profile directory and exports it
 as `DEV_CONFIG_PROFILE` for verification. It places that profile's `bin` first on
 PATH after other initialization, so old `~/bin` or Homebrew tools do not shadow
 it. When `IN_NIX_SHELL` is set, it preserves the development shell's PATH order.
-Avoid adding another PATH prepend after this block.
+Avoid adding another PATH prepend after this block. On Ubuntu, also inspect the
+login startup file: `.profile` can prepend `~/bin` after sourcing `.bashrc`.
+Follow the [Ubuntu Bash ordering instructions](docs/ubuntu-validation.md#bash-startup-order)
+when that happens; shell files remain locally managed.
 
 Open a fresh terminal and run:
 
@@ -213,12 +226,15 @@ Nix supplies the editor and language-server executables; uv manages project
 interpreters and dependencies. Launch Neovim in the project's environment or
 configure basedpyright's interpreter explicitly.
 
-The flake also provides an optional trial shell with the shared tools:
+The flake also provides an optional trial shell with the shared tools **and a Nix
+C/C++ compiler**:
 
 ```sh
 nix develop "path:$HOME/dev-config"
 ```
 
+This changes compiler selection only inside the development shell. Ordinary
+terminals and Neovim plugin builds use the system compiler after profile activation.
 Use separate project-specific development shells when a project needs its own
 native libraries or toolchain.
 
@@ -245,8 +261,10 @@ For Neovim plugin and parser commands, see
 
 - If a command selects an unexpected version, inspect `type -a <command>` in a
   fresh terminal. Check that the shell integration runs last. The verification
-  script expects the personal Nix profile; project shells can intentionally
-  select other tools.
+  script expects personal tools from Nix and a working system `cc`/`c++` outside
+  `nix develop`. A compiler still resolving into `/nix/store` can indicate an older
+  active profile or another Nix installation on PATH; apply the updated profile
+  and check again. Project shells can intentionally select other tools.
 - If `verify-tools.sh` reports a missing configured profile, activate the setup
   and open a terminal that sources the generated integration.
 - If activation reports a missing checkout file, run the helper from the complete

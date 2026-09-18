@@ -52,7 +52,8 @@
         let pkgs = nixpkgs.legacyPackages.${system};
         in {
           default = pkgs.mkShell {
-            packages = import ./nix/packages.nix { inherit pkgs; };
+            # The personal profile uses the system compiler; this optional shell owns its toolchain.
+            packages = (import ./nix/packages.nix { inherit pkgs; }) ++ [ pkgs.stdenv.cc ];
           };
         });
     };

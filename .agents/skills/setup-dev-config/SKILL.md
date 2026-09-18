@@ -27,6 +27,9 @@ Use these maintained instructions and scripts rather than creating another insta
   existing settings before merging or moving them; move a real Neovim directory
   aside before linking. Preserve any existing `.before-dev-config` backups under
   distinct names if they would block activation.
+- Verify system `cc` and `c++` and inspect existing `CC`/`CXX` overrides. Follow
+  the README's platform-specific prerequisites if missing; the personal profile
+  does not supply a compiler. The optional Nix development shell does.
 - Keep Homebrew/apt/manual tools during validation. System packages, drivers,
   CUDA, Docker, system Python, and vendor tooling retain their existing ownership.
 
@@ -48,7 +51,11 @@ steps; do not add another approval checkpoint for each step.
    `dev-config/shell.sh` once at the end of the interactive startup file, transfer
    shared fzf options to `home.nix`, and remove superseded fzf/Starship hooks.
    Account for custom XDG paths. Do not edit the generated file or transfer shell
-   file ownership to Home Manager.
+   file ownership to Home Manager. On Ubuntu, follow the guide's
+   [Bash startup order](../../../docs/ubuntu-validation.md#bash-startup-order):
+   inspect login-file precedence and move existing personal PATH additions before
+   `.bashrc` is sourced. Preserve `PROMPT_COMMAND` and work initialization; do not
+   create duplicate sourcing. Test both login and non-login interactive Bash.
 4. Verify tools in a fresh interactive terminal outside a project Nix shell using
    `./scripts/verify-tools.sh` and `type -a` for migrated commands. Investigate
    aliases and earlier PATH entries if old binaries still win. Agent-injected
