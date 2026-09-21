@@ -64,6 +64,10 @@ explicit project activation may intentionally put its tools first on PATH.
    Ghostty, follow its [installation and configuration checks](../README.md#ghostty-terminal).
    After switching and reloading Ghostty, check Ctrl-Shift-Arrows in a split layout;
    Ctrl-Alt-Arrows should no longer move between Ghostty splits.
+   In an SSH session with `TERM=xterm-ghostty`, confirm `infocmp xterm-ghostty`
+   succeeds and `TERMINFO_DIRS` includes the system terminfo directories. Start
+   `tmux -L terminfo-check -f /dev/null new-session` without a per-command
+   `TERMINFO` override; exit the test session afterward.
 3. Open Neovim and let plugin/parser installation complete. Check dependency
    health, Telescope, Yazi, and fresh native plugin/parser builds with the system
    compiler. A cached binary alone does not validate the new compiler selection.

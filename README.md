@@ -157,6 +157,12 @@ login startup file: `.profile` can prepend `~/bin` after sourcing `.bashrc`.
 Follow the [Ubuntu Bash ordering instructions](docs/ubuntu-validation.md#bash-startup-order)
 when that happens; shell files remain locally managed.
 
+On Ubuntu, `home.sessionSearchVariables.TERMINFO_DIRS` prepends the personal
+profile and system terminfo directories, retaining existing entries and leaving
+`TERMINFO` unchanged. The shell integration loads these Home Manager session
+variables so Nix tools such as tmux can find definitions installed by Ubuntu
+packages, including Ghostty's `xterm-ghostty`.
+
 Open a fresh terminal and run:
 
 ```sh
@@ -274,6 +280,13 @@ For Neovim plugin and parser commands, see
   `nix develop`. A compiler still resolving into `/nix/store` can indicate an older
   active profile or another Nix installation on PATH; apply the updated profile
   and check again. Project shells can intentionally select other tools.
+- If tmux reports `missing or unsuitable terminal: xterm-ghostty` on Ubuntu,
+  check `infocmp xterm-ghostty` and `echo "$TERMINFO_DIRS"` on that machine. Apply
+  the shell integration and open a fresh shell. For an existing tmux server,
+  compare with `tmux -L terminfo-check -f /dev/null new-session`; exit the test
+  session afterward. Existing servers may retain an earlier environment; finish
+  their sessions before restarting them. If `infocmp` cannot find the definition,
+  follow [Ghostty's terminfo guidance](https://ghostty.org/docs/help/terminfo).
 - If `verify-tools.sh` reports a missing configured profile, activate the setup
   and open a terminal that sources the generated integration.
 - If activation reports a missing checkout file, run the helper from the complete

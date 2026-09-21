@@ -1,6 +1,6 @@
 # Validation status
 
-Last reviewed: 2026-09-18. These are observed results, not a guarantee for later
+Last reviewed: 2026-09-21. These are observed results, not a guarantee for later
 dependency updates. The compiler split is activated and verified on macOS;
 Ubuntu runtime validation remains pending. The newer Ghostty platform-file change
 is built and checked but not yet activated.
@@ -10,6 +10,20 @@ is built and checked but not yet activated.
 | Apple Silicon macOS | Passed | Build, activation, and repeat activation passed | Compiler, fresh Zsh, and editor checks passed |
 | x86_64 Ubuntu | Passed | Pending | Pending |
 | ARM64 Ubuntu | Passed | Pending | Pending |
+
+## Ubuntu terminfo integration (2026-09-21)
+
+- The user confirmed Ubuntu's system `infocmp` finds `xterm-ghostty` under
+  `/usr/share/terminfo`, while Nix tmux failed without an explicit path. A fresh
+  tmux server worked with `TERMINFO=/usr/share/terminfo`.
+- The Linux-only fix uses `home.sessionSearchVariables.TERMINFO_DIRS` to prepend
+  the personal profile and system directories. All three Home Manager profiles
+  evaluate and the macOS profile builds without activation.
+- Generated session scripts pass Bash/Zsh syntax checks. Twelve Ubuntu export
+  checks cover unset, empty, and custom search paths, retaining existing entries
+  and leaving `TERMINFO` unchanged. The macOS declaration and lockfiles are unchanged.
+- Documentation links and Git whitespace checks pass. Applying the fix on Ubuntu
+  and verifying plain tmux in a fresh SSH session/server remain pending.
 
 ## Ghostty platform configuration (2026-09-18)
 

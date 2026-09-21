@@ -7,6 +7,15 @@ in {
   home.stateVersion = "26.05";
   home.packages = import ./nix/packages.nix { inherit pkgs; };
   programs.home-manager.enable = true;
+  # Let Nix terminal tools find definitions installed by Ubuntu packages.
+  home.sessionSearchVariables = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+    TERMINFO_DIRS = [
+      "${config.home.profileDirectory}/share/terminfo"
+      "/etc/terminfo"
+      "/lib/terminfo"
+      "/usr/share/terminfo"
+    ];
+  };
   programs.fzf = {
     enable = true;
     defaultOptions = [ "--height 40%" "--layout=reverse" ];
