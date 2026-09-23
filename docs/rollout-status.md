@@ -1,15 +1,41 @@
 # Validation status
 
-Last reviewed: 2026-09-21. These are observed results, not a guarantee for later
+Last reviewed: 2026-09-22. These are observed results, not a guarantee for later
 dependency updates. The compiler split is activated and verified on macOS;
-Ubuntu runtime validation remains pending. The newer Ghostty platform-file change
-is built and checked but not yet activated.
+Broader Ubuntu runtime validation remains pending. The macOS Ghostty entry file
+and Yazi configuration link are present in the active Home Manager configuration.
 
 | Platform | Configuration evaluation | Build and activation | Runtime checks |
 | --- | --- | --- | --- |
 | Apple Silicon macOS | Passed | Build, activation, and repeat activation passed | Compiler, fresh Zsh, and editor checks passed |
 | x86_64 Ubuntu | Passed | Pending | Pending |
 | ARM64 Ubuntu | Passed | Pending | Pending |
+
+## Markview previews (2026-09-22)
+
+- Markview is installed and pinned; no existing plugin revisions changed. LaTeX,
+  HTML, and YAML parsers compile and load on macOS using the host compiler.
+- Headless checks pass for raw Markdown opening at startup and later, opt-in
+  preview decorations, both local shortcuts, repeated split preview, editing-mode
+  callbacks, and required-parser health. Closing a split opened from raw source
+  preserves that state; new Markdown buffers start raw. Code buffers retain their
+  original conceal defaults and have no Markdown shortcuts.
+- With raw-by-default previews, seven warm startup samples give medians of
+  65.4 ms for an empty editor and 108.5 ms for a mixed Markdown/math fixture.
+  Earlier measurements were 60.6 / 85.8 ms before Markview and 62.1 / 336.6 ms with
+  automatic preview. Rendering now happens on request. These are headless timings,
+  not Ghostty latency.
+- Actual terminal font appearance and Ubuntu runtime behavior remain unverified.
+
+## Yazi file openers (2026-09-22)
+
+- All three Home Manager profiles evaluate; the macOS profile builds with a
+  writable link to the checkout's Yazi configuration. This integration changed no
+  package or plugin revisions.
+- Isolated macOS Yazi checks verify HTML/HTM/SVG default dispatch with a stub
+  system opener, CSV/TSV opener menus, and file selection through chooser mode.
+- The active macOS configuration links to the checkout's Yazi TOML. Actual desktop
+  application launches and Ubuntu runtime checks remain pending.
 
 ## Ubuntu terminfo integration (2026-09-21)
 
@@ -22,8 +48,9 @@ is built and checked but not yet activated.
 - Generated session scripts pass Bash/Zsh syntax checks. Twelve Ubuntu export
   checks cover unset, empty, and custom search paths, retaining existing entries
   and leaving `TERMINFO` unchanged. The macOS declaration and lockfiles are unchanged.
-- Documentation links and Git whitespace checks pass. Applying the fix on Ubuntu
-  and verifying plain tmux in a fresh SSH session/server remain pending.
+- Documentation links and Git whitespace checks pass. The user subsequently
+  confirmed plain `tmux` works on Ubuntu over SSH; broader Ubuntu checks remain
+  pending.
 
 ## Ghostty platform configuration (2026-09-18)
 
@@ -32,8 +59,9 @@ is built and checked but not yet activated.
 - The macOS Ghostty CLI validates the generated configs. Isolated config checks
   confirm the shared theme, Ubuntu Ctrl-Shift-Arrow split navigation, removal of
   Ctrl-Alt-Arrow bindings, and unchanged macOS bindings.
-- Activation of the generated entry file and actual Ubuntu keyboard interaction
-  remain pending. CLI checks on macOS do not validate Linux desktop shortcuts.
+- The active macOS entry file includes the checkout's shared and macOS settings.
+  Actual Ubuntu keyboard interaction remains pending; CLI checks on macOS do not
+  validate Linux desktop shortcuts.
 
 ## Compiler split validation (2026-09-18)
 
@@ -89,9 +117,11 @@ is built and checked but not yet activated.
 - Restoring a distinct earlier Home Manager generation has not been exercised.
   An isolated check confirmed that the preserved original shell setup selects the
   retained Homebrew tools.
-- Intermittent roughly one-second Neovim startup delays reported in Ghostty have
-  not been reproduced reliably. Controlled warm-start measurements do not rule
-  them out. The [editor guide](../nvim/README.md#startup-timing) explains capture.
+- A startup log captured a configured Neovim launch taking 794 ms, followed by
+  56 ms on the next launch. Loading was slower across several components, which
+  is consistent with cold caches or system contention; the cause remains
+  unconfirmed. Warm benchmarks do not explain this intermittent delay. See the
+  [startup profiling instructions](../nvim/README.md#startup-timing).
 
 Mac migration backups are stored under `~/.local/state/dev-config/backups/`.
 See [recovery instructions](../README.md#troubleshooting-and-recovery).

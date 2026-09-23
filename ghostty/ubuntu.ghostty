@@ -4,6 +4,9 @@ keybind = ctrl+shift+right=goto_split:right
 keybind = ctrl+shift+up=goto_split:up
 keybind = ctrl+shift+down=goto_split:down
 
+# Equalize split sizes.
+keybind = ctrl+shift+equal=equalize_splits
+
 # Release the previous shortcuts to terminal applications.
 keybind = ctrl+alt+left=unbind
 keybind = ctrl+alt+right=unbind

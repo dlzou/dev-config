@@ -1,0 +1,8 @@
+[open]
+prepend_rules = [
+  { url = "*.html", use = ["open", "edit", "reveal"] },
+  { url = "*.htm",  use = ["open", "edit", "reveal"] },
+  { url = "*.svg",  use = ["open", "edit", "reveal"] },
+  { url = "*.csv",  use = ["edit", "open", "reveal"] },
+  { url = "*.tsv",  use = ["edit", "open", "reveal"] },
+]

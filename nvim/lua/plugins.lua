@@ -50,6 +50,36 @@ return {
     config = function() require('config.treesitter') end,
   },
   {
+    'OXY2DEV/markview.nvim',
+    -- Markview defers rendering internally; initialize after the colorscheme.
+    lazy = false,
+    dependencies = { 'folke/tokyonight.nvim' },
+    opts = function()
+      local callbacks = {}
+      for name, callback in pairs(require('markview.spec').default.preview.callbacks) do
+        callbacks[name] = function(...)
+          -- Keep upstream conceal changes from becoming defaults for other buffers.
+          local level, cursor = vim.go.conceallevel, vim.go.concealcursor
+          callback(...)
+          vim.go.conceallevel, vim.go.concealcursor = level, cursor
+        end
+      end
+      return { preview = { enable = false, filetypes = { 'markdown' }, callbacks = callbacks } }
+    end,
+    init = function()
+      vim.api.nvim_create_autocmd('FileType', {
+        group = vim.api.nvim_create_augroup('UserMarkviewKeys', { clear = true }),
+        pattern = 'markdown',
+        callback = function(event)
+          vim.keymap.set('n', '<leader>mp', '<cmd>Markview toggle<CR>',
+            { buffer = event.buf, silent = true, desc = 'Toggle Markdown preview' })
+          vim.keymap.set('n', '<leader>ms', '<cmd>Markview splitToggle<CR>',
+            { buffer = event.buf, silent = true, desc = 'Toggle Markdown split preview' })
+        end,
+      })
+    end,
+  },
+  {
     'lukas-reineke/indent-blankline.nvim',
     main = 'ibl',
     opts = {
@@ -119,7 +149,8 @@ return {
     'tpope/vim-fugitive',
     lazy = false,
     keys = {
-      { '<leader>gdv', '<cmd>Gvdiffsplit!<CR>', silent = true, desc = 'Git conflict diff' },
+      { '<leader>gs', '<cmd>Git<CR>', silent = true, desc = 'Git status' },
+      { '<leader>gb', '<cmd>Git blame<CR>', silent = true, desc = 'Git blame' },
     },
   },
   {
@@ -137,10 +168,25 @@ return {
       'DiffviewToggleFiles', 'DiffviewRefresh', 'DiffviewLog',
     },
     keys = {
-      { '<leader>gv', '<cmd>DiffviewOpen<CR>', silent = true, desc = 'Git diff view' },
+      { '<leader>dv', '<cmd>DiffviewOpen<CR>', silent = true, desc = 'Review changes' },
+      { '<leader>dh', '<cmd>DiffviewFileHistory %<CR>', silent = true, desc = 'File history' },
+      { '<leader>dH', '<cmd>DiffviewFileHistory<CR>', silent = true, desc = 'Repository history' },
+      { '<leader>dq', '<cmd>DiffviewClose<CR>', silent = true, desc = 'Close diff view' },
     },
     dependencies = { 'nvim-lua/plenary.nvim' },
-    opts = {},
+    opts = {
+      keymaps = {
+        view = {
+          { 'n', '<C-g>', '<cmd>DiffviewClose<CR>', { desc = 'Close diff view' } },
+        },
+        file_panel = {
+          { 'n', '<C-g>', '<cmd>DiffviewClose<CR>', { desc = 'Close diff view' } },
+        },
+        file_history_panel = {
+          { 'n', '<C-g>', '<cmd>DiffviewClose<CR>', { desc = 'Close diff view' } },
+        },
+      },
+    },
   },
   {
     'neovim/nvim-lspconfig',

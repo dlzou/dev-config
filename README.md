@@ -1,6 +1,6 @@
 # Personal development configuration
 
-CLI tools, Neovim, Starship, and Ghostty settings for Apple Silicon macOS and Ubuntu
+CLI tools, Neovim, Yazi, Starship, and Ghostty settings for Apple Silicon macOS and Ubuntu
 (x86_64 or ARM64). Nix supplies external executables; standalone Home Manager
 installs the personal profile and links configuration files to this checkout.
 Neovim's lazy.nvim manages plugins separately.
@@ -21,6 +21,7 @@ Ubuntu coverage, and [Neovim documentation](nvim/README.md) for editor shortcuts
 | `nix/packages.nix` | Shared external tools and minimum editor dependency versions |
 | `nvim/` | Writable Lua configuration and `lazy-lock.json` |
 | `starship.toml` | Writable prompt settings in native TOML |
+| `yazi/yazi.toml` | Shared file-type opener choices |
 | `ghostty/*.ghostty` | Writable shared settings and macOS/Ubuntu overrides |
 | `scripts/setup-home.sh` | Build and activate the current platform's profile |
 | `scripts/verify-tools.sh` | Check Nix-managed tools and the external C/C++ compiler |
@@ -63,7 +64,7 @@ The setup script detects its own checkout location. No username or checkout-path
 changes are needed in the Nix files. The SSH clone URL requires GitHub SSH access;
 the equivalent HTTPS URL is `https://github.com/dlzou/dev-config.git`.
 
-Before activation, back up existing Neovim, Starship, Ghostty, and user Nix
+Before activation, back up existing Neovim, Yazi, Starship, Ghostty, and user Nix
 configurations and the shell startup files you will edit. Keep backups outside
 the repository. Move an existing `~/.config/nvim` directory aside rather than
 replacing it in place. The setup helper backs up conflicting files with a
@@ -181,11 +182,12 @@ and Neovim icons.
 | Packages, fzf options, or generated shell integration | Edit the Nix files, run `--switch`, and open a fresh terminal for shell changes |
 | Neovim settings | Edit `nvim/`; restart Neovim or reload the relevant Lua module |
 | Starship prompt | Edit `starship.toml`; subsequent prompt renders use the changes |
+| Yazi file openers | Edit `yazi/yazi.toml`; restart Yazi |
 | Ghostty terminal | Edit the shared or platform file in `ghostty/`; reload Ghostty configuration |
 
-Home Manager links the Neovim directory and Starship TOML directly to the writable
-checkout. Ghostty's generated entry file loads its shared and platform settings
-from the checkout. Edit generated files through their source in `home.nix`.
+Home Manager links the Neovim directory, Starship TOML, and Yazi TOML directly to
+the writable checkout. Ghostty's generated entry file loads its shared and
+platform settings from the checkout. Edit generated files through their source in `home.nix`.
 An explicit `STARSHIP_CONFIG` environment variable overrides Starship's normal
 config path; remove or adjust it if you want the managed file to take effect.
 
@@ -204,8 +206,8 @@ selects the platform file and generates two ordered `config-file` includes:
 2. `ghostty/macos.ghostty` or `ghostty/ubuntu.ghostty`: platform overrides.
 
 Both Ubuntu architectures use `ubuntu.ghostty`. On Ubuntu, **Ctrl-Shift-Arrows**
-moves between splits; the former **Ctrl-Alt-Arrows** bindings are unbound. macOS
-keeps its default bindings.
+moves between splits and **Ctrl-Shift-=** equalizes split sizes. The former
+**Ctrl-Alt-Arrows** bindings are unbound. macOS keeps its default bindings.
 
 Run `./scripts/setup-home.sh --switch` once to install this entry file. Afterward,
 edit the shared or platform file in the checkout and reload with **Cmd-Shift-,**
@@ -219,6 +221,29 @@ checkout; check other config files if an edit appears to have no effect. See
 reload behavior. Use `ghostty +validate-config` to check the effective config;
 if the CLI is not on PATH on macOS, use
 `/Applications/Ghostty.app/Contents/MacOS/ghostty +validate-config`.
+
+## Yazi file openers
+
+Home Manager links `~/.config/yazi/yazi.toml` to `yazi/yazi.toml` in the checkout.
+Run `./scripts/setup-home.sh --switch` once to establish the link; later edits
+only require restarting Yazi. A custom `YAZI_CONFIG_HOME` must point to the managed
+configuration directory for these rules to apply.
+
+| File type | Default in standalone Yazi | Other choices with Shift-O |
+| --- | --- | --- |
+| HTML / HTM, SVG | System default application | Editor, Reveal |
+| CSV / TSV | Editor | System default application, Reveal |
+
+The system opener uses `open` on macOS and `xdg-open` on an Ubuntu desktop.
+It follows OS file associations: HTML usually opens in a browser, and CSV/TSV
+opens in a spreadsheet app if one is associated with that type. Home Manager sets
+`EDITOR=nvim` and `VISUAL=nvim`; Yazi uses `$EDITOR` for its editor choice. Other
+file types retain Yazi's defaults.
+
+Inside Neovim, Enter selects the file for Neovim; use Shift-O for external
+openers. Over SSH, these commands run on the remote machine. Viewing remote HTML
+in a local browser requires transferring the files or serving them through an
+SSH port forward.
 
 ## Neovim and Python projects
 

@@ -35,7 +35,8 @@ Telescope uses `rg`; missing `fd` produces only a health-check warning.
 
 Telescope, Diffview, Trouble, Undotree, and Yazi load on their commands or
 shortcuts. Completion and autopairs load when you first enter insert mode;
-press Tab to request completion. Use `:Lazy profile` to inspect plugin timings.
+press Tab to request completion. Markview initializes after the colorscheme and
+defers rendering internally. Use `:Lazy profile` to inspect plugin timings.
 
 ## Language support
 
@@ -75,8 +76,11 @@ Incomplete mapped sequences time out after 750 ms. Completion stays manual.
 | Space c | Command picker |
 | Space fb / ff / fg | Buffers / files / text search |
 | Space fy | Yazi file browser at the current file |
-| Space gdv / gdh / gdl | Conflict diff / get left / get right |
-| Space gv | Git diff view (`:DiffviewClose` to close) |
+| Space mp / ms in Markdown | Toggle current-buffer preview / split preview |
+| Space gs / gb | Fugitive: Git status / blame current file |
+| Space dv / dq | Diffview: review changes / close view |
+| Space dh / dH | Diffview: current-file history / repository history |
+| Ctrl-G in Diffview (normal mode) | Close the diff view from a diff buffer, file list, or history panel |
 | Space ld / ll / ln / lr / ls | Definitions / diagnostics / rename / references / workspace symbols |
 | Space la | LSP code actions |
 | Space lf / li / lx | Python: Ruff format / organize imports / fix all |
@@ -97,6 +101,53 @@ remain off. Python uses Neovim's native indentation; LSP snippets use `vim.snipp
 Undo history persists across restarts in Neovim's standard undo directory.
 Surround, indentation detection, Git tools, and Startify sessions are enabled.
 
+## Markdown preview
+
+Markdown opens as raw source by default. Enable
+[Markview](https://github.com/OXY2DEV/markview.nvim) on demand with the shortcuts
+below. Headings, lists, tables, code blocks, inline HTML, YAML frontmatter, and
+supported math notation are rendered inside Neovim. Math
+uses text decorations and Unicode symbols, not full LaTeX typesetting.
+
+- **Space mp** (`:Markview toggle`) toggles preview for the current buffer.
+- **Space ms** (`:Markview splitToggle`) opens a synchronized side-by-side preview.
+  Press it again from the source buffer to close the preview.
+- These normal-mode shortcuts are buffer-local to Markdown. When enabled, inline
+  preview is shown in normal mode; insert mode exposes the source for editing.
+- Run `:checkhealth markview` to check dependencies. Markdown, LaTeX, HTML, and YAML
+  parsers install automatically; after first installation, reopen the file if
+  previews are incomplete. Optional parsers for other formats are not required.
+
+## Git workflow
+
+Use **Fugitive** for staging and commits: `Space gs` opens Git status, where `=`
+expands an inline diff, `s` stages the file or hunk under the cursor, `u` unstages
+it, and `cc` starts a commit. `Space gb` opens blame for the current file. Press
+`g?` in Fugitive status for help.
+
+Use **Diffview** for reviewing changes (`Space dv`), file history (`Space dh`),
+and repository history (`Space dH`). During a merge or rebase, open a conflicted
+file from its file panel to see the source versions and editable result.
+
+These normal-mode shortcuts are local to Diffview's diff buffers:
+
+| Keys | Action |
+| --- | --- |
+| `]x` / `[x` | Next / previous conflict |
+| Space co / ct | Choose ours / theirs for the current conflict |
+| Space cb / ca | Choose the base version / keep both sides |
+| `g?` | Show Diffview shortcuts |
+
+You can edit the result manually, including refining a combined result. Save with
+`:w`, then stage the resolved file with `s` in Diffview's file panel or Fugitive
+status. During a rebase, inspect the source versions carefully: ours/theirs refer
+to Git's merge stages, not necessarily your branch versus someone else's.
+
+`Space dq` closes Diffview; Ctrl-G also closes it locally from its diff buffers,
+file panel, or history panel. Outside Diffview, normal-mode Ctrl-G retains its
+usual behavior. Fugitive's `:Gvdiffsplit!` remains available for an occasional
+current-file comparison, using ordinary Neovim splits.
+
 ## Telescope layout
 
 Configured pickers use `flex` at 80% width and height, with the prompt at the top.
@@ -112,12 +163,17 @@ in a floating terminal at 80% of the editor size. It loads on `Space fy` or `:Ya
 Directory arguments such as `nvim .` use Neovim's built-in netrw browser; press
 `Space fy` to open Yazi.
 
+Shared HTML, SVG, and CSV/TSV opener choices are documented in the
+[repository's Yazi guide](../README.md#yazi-file-openers). Enter still selects the
+file for Neovim; Shift-O offers the configured openers.
+
 Inside Yazi:
 
 | Keys | Action |
 | --- | --- |
 | h / j / k / l | Parent directory / down / up / enter directory |
 | Enter | Open the selected file in Neovim |
+| Shift-O | Choose an external opener for the selected file |
 | Ctrl-G / q | Close Yazi |
 | Esc | Cancel a Yazi action or selection |
 | Ctrl-S | Telescope text search in the hovered directory/file's parent, or selected files |

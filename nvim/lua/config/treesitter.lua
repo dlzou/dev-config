@@ -1,4 +1,7 @@
-local parsers = { 'python', 'c', 'cpp', 'lua', 'vim', 'vimdoc', 'markdown', 'markdown_inline', 'bash' }
+local parsers = {
+  'python', 'c', 'cpp', 'lua', 'vim', 'vimdoc', 'bash',
+  'markdown', 'markdown_inline', 'latex', 'html', 'yaml',
+}
 require('nvim-treesitter').install(parsers)
 
 vim.api.nvim_create_autocmd('FileType', {

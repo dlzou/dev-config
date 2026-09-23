@@ -23,7 +23,5 @@ map('t', '<C-g>', '<C-\\><C-n>', { desc = 'Leave terminal input mode' })
 -- Preserve the old backslash prefix alongside Space.
 map('n', '\\', '<Space>', { remap = true })
 
-normal('<leader>gdh', '<cmd>diffget //2<CR>', 'Get left diff')
-normal('<leader>gdl', '<cmd>diffget //3<CR>', 'Get right diff')
 normal('<leader>n', '<cmd>nohlsearch<CR>', 'Clear search highlight')
 normal('<leader>t', '<cmd>terminal<CR>', 'Terminal')

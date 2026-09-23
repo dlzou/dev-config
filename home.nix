@@ -7,6 +7,10 @@ in {
   home.stateVersion = "26.05";
   home.packages = import ./nix/packages.nix { inherit pkgs; };
   programs.home-manager.enable = true;
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+  };
   # Let Nix terminal tools find definitions installed by Ubuntu packages.
   home.sessionSearchVariables = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     TERMINFO_DIRS = [
@@ -35,6 +39,8 @@ in {
   xdg.configFile."nvim".source = config.lib.file.mkOutOfStoreSymlink "${checkout}/nvim";
   xdg.configFile."starship.toml".source =
     config.lib.file.mkOutOfStoreSymlink "${checkout}/starship.toml";
+  xdg.configFile."yazi/yazi.toml".source =
+    config.lib.file.mkOutOfStoreSymlink "${checkout}/yazi/yazi.toml";
   # Load shared settings first, then the platform overrides, directly from the checkout.
   xdg.configFile."ghostty/config.ghostty".text = ''
     config-file = "${checkout}/ghostty/config.ghostty"
@@ -75,6 +81,7 @@ in {
   home.activation.checkDevConfigCheckout = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
     for file in ${lib.escapeShellArg "${checkout}/nvim/init.lua"} \
       ${lib.escapeShellArg "${checkout}/starship.toml"} \
+      ${lib.escapeShellArg "${checkout}/yazi/yazi.toml"} \
       ${lib.escapeShellArg "${checkout}/ghostty/config.ghostty"} \
       ${lib.escapeShellArg ghosttyPlatformConfig}; do
       if [ ! -f "$file" ]; then
