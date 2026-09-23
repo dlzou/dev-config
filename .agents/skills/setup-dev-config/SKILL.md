@@ -9,8 +9,8 @@ description: Bootstrap or migrate this dev-config checkout on Apple Silicon macO
 
 Resolve the repository root relative to this skill (`../../..`), not from a fixed
 username or checkout path. Read [README.md](../../../README.md),
-[scripts/setup-home.sh](../../../scripts/setup-home.sh), and
-[home.nix](../../../home.nix). For Ubuntu, also use
+[scripts/setup-home.sh](../../../scripts/setup-home.sh), [home.nix](../../../home.nix),
+and the [setup reference](../../../docs/reference.md#setup-details). For Ubuntu, also use
 [docs/ubuntu-validation.md](../../../docs/ubuntu-validation.md).
 Use these maintained instructions and scripts rather than creating another installer.
 
@@ -47,8 +47,8 @@ steps; do not add another approval checkpoint for each step.
 2. Run `./scripts/setup-home.sh --build` from the repository root. Resolve build
    failures before running `./scripts/setup-home.sh --switch`. The helper derives
    the account, checkout path, and native profile; keep the existing lockfile.
-3. Follow the README's shell integration section. Source the generated
-   `dev-config/shell.sh` once at the end of the interactive startup file, transfer
+3. Follow the README's [shell integration section](../../../README.md#4-connect-the-shell).
+   Source the generated `dev-config/shell.sh` once at the end of the interactive startup file, transfer
    shared fzf options to `home.nix`, and remove superseded fzf/Starship hooks.
    Account for custom XDG paths. Do not edit the generated file or transfer shell
    file ownership to Home Manager. On Ubuntu, follow the guide's

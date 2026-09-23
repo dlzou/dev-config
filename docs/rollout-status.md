@@ -124,4 +124,4 @@ and Yazi configuration link are present in the active Home Manager configuration
   [startup profiling instructions](../nvim/README.md#startup-timing).
 
 Mac migration backups are stored under `~/.local/state/dev-config/backups/`.
-See [recovery instructions](../README.md#troubleshooting-and-recovery).
+See [recovery instructions](reference.md#recovery).

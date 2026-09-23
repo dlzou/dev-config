@@ -15,7 +15,7 @@ The first launch downloads lazy.nvim, plugins, and syntax parsers and builds
 Telescope's native sorter. Wait for installation to finish, then reopen Neovim;
 a buffer opened before its parser was installed may not yet have highlighting.
 Native builds use the system C/C++ compiler; see the
-[toolchain prerequisites](../README.md#2-install-nix).
+[toolchain prerequisites](../README.md#2-install-prerequisites).
 
 - `:checkhealth userconfig` checks external tools and minimum versions; also use
   `:checkhealth lazy`, `:checkhealth nvim-treesitter`, `:checkhealth vim.lsp`,
@@ -27,7 +27,7 @@ Native builds use the system C/C++ compiler; see the
 - `:TSUpdate` updates syntax parsers. Parsers follow nvim-treesitter's definitions;
   their compiled artifacts are local to each machine.
 - For external tools, see the repository's [update procedure](../README.md#updates)
-  and [minimum versions](../README.md#configuration-files).
+  and [minimum versions](../docs/reference.md#development-tools).
 
 Telescope uses `rg`; missing `fd` produces only a health-check warning.
 
@@ -164,8 +164,8 @@ Directory arguments such as `nvim .` use Neovim's built-in netrw browser; press
 `Space fy` to open Yazi.
 
 Shared HTML, SVG, and CSV/TSV opener choices are documented in the
-[repository's Yazi guide](../README.md#yazi-file-openers). Enter still selects the
-file for Neovim; Shift-O offers the configured openers.
+[repository's Yazi guide](../docs/reference.md#yazi-file-openers). Enter still
+selects the file for Neovim; Shift-O offers the configured openers.
 
 Inside Yazi:
 

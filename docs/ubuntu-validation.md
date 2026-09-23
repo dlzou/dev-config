@@ -13,7 +13,8 @@ evaluation on macOS does not verify Linux builds or shell/runtime behavior.
    manual binaries in `~/bin`, Snap/apt installations, and apt-specific fzf sourcing under
    `/usr/share` that could conflict with the new shell integration.
 4. Follow the [installation guide](../README.md#install), including backups, Nix
-   installation if needed, and building before activation. Preserve local
+   installation if needed, and activation. For a separate build check, run
+   `./scripts/setup-home.sh --build` first. Preserve local
    SSH-agent/proxy/certificate setup and work-tool initialization.
 
 Keep existing installations throughout validation. Check `cc --version` and
@@ -48,8 +49,8 @@ explicit project activation may intentionally put its tools first on PATH.
 
 ## Activate and test
 
-1. Complete [activation](../README.md#3-build-and-activate) and
-   [shell integration](../README.md#4-integrate-the-existing-shell). Check that
+1. Complete [activation](../README.md#3-activate) and
+   [shell integration](../README.md#4-connect-the-shell). Check that
    apt's fzf hooks have been replaced and the [Bash startup order](#bash-startup-order)
    prevents `~/bin` from shadowing the Nix profile.
 2. Test fresh login and non-login interactive Bash (`bash -lic` and `bash -ic`,
@@ -61,7 +62,7 @@ explicit project activation may intentionally put its tools first on PATH.
    CUDA/work build without changing its toolkit or compiler settings.
    Check fzf's Ctrl-R/Ctrl-T, Starship symbols with a Nerd Font, tmux, and existing work commands. Confirm Git/SSH and
    corporate-network workflows still use the intended local settings. If using
-   Ghostty, follow its [installation and configuration checks](../README.md#ghostty-terminal).
+   Ghostty, follow its [installation and configuration checks](reference.md#ghostty).
    After switching and reloading Ghostty, check Ctrl-Shift-Arrows in a split layout;
    Ctrl-Alt-Arrows should no longer move between Ghostty splits.
    In an SSH session with `TERM=xterm-ghostty`, confirm `infocmp xterm-ghostty`
@@ -85,4 +86,5 @@ with checks actually completed on Ubuntu.
 
 After validation, review apt's proposed removals and dependencies before
 selectively removing redundant personal tools. Retain the existing ownership of
-system and work tooling described in the [repository overview](../README.md).
+system and work tooling described in the
+[development-tool reference](reference.md#compilers-and-project-environments).

@@ -16,7 +16,7 @@ current files before editing:
 | [home.nix](../../../home.nix) | Home Manager modules, links, and generated shell hooks |
 | [flake.nix](../../../flake.nix) / [flake.lock](../../../flake.lock) | Supported platforms and pinned package/module sources |
 | [scripts/verify-tools.sh](../../../scripts/verify-tools.sh) | Expected executable names and profile selection checks |
-| [README.md](../../../README.md) | Tool ownership, application, updates, and recovery |
+| [README.md](../../../README.md) / [reference](../../../docs/reference.md) | Application, updates, tool ownership, and recovery |
 
 Check the working tree and preserve unrelated changes. Keep project Python
 interpreters/dependencies under uv and Neovim plugins under lazy.nvim unless the
@@ -67,7 +67,8 @@ package change. Report when moving Nixpkgs also changes other tool versions.
 2. Run `./scripts/setup-home.sh --build`. For portable package changes, evaluate
    the affected platform profiles when tooling permits; distinguish evaluation
    from a successful native build. Direct flake evaluation needs the local
-   `DEV_CONFIG_*` variables and `--impure` described in the README.
+   `DEV_CONFIG_*` variables and `--impure` described in the
+   [setup reference](../../../docs/reference.md#setup-details).
 3. If the request includes local installation/application, run
    `./scripts/setup-home.sh --switch`; a configuration-only request stops at the
    build. Do not introduce an extra approval step when activation is already
@@ -79,5 +80,6 @@ package change. Report when moving Nixpkgs also changes other tool versions.
 
 Summarize the declaration changes, whether activation occurred, and validation
 results. Keep commits and pushes within the user's explicit scope. Use the
-README's recovery instructions if an activated change needs reverting; Home
-Manager rollback does not revert writable checkout files or local shell edits.
+[recovery instructions](../../../docs/reference.md#recovery) if an activated change
+needs reverting; Home Manager rollback does not revert writable checkout files or
+local shell edits.
