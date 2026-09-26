@@ -47,6 +47,30 @@ After backing up the affected files outside the checkout:
 These are one-time local setup edits, not automatic activation changes. Later
 explicit project activation may intentionally put its tools first on PATH.
 
+## Clipboard checks
+
+After applying the [tmux configuration](reference.md#tmux-and-clipboard), verify:
+
+- Inspect `DISPLAY` / `WAYLAND_DISPLAY` and `command -v wl-copy wl-paste xclip xsel`.
+  Desktop clipboard tools can come from the host; they are not required by the
+  Nix tool verifier. In Neovim, use `:echo provider#clipboard#Executable()` to
+  check automatic selection.
+- `infocmp tmux-256color` succeeds, a new tmux window has `TERM=tmux-256color`, and
+  `tmux info` lists a usable `Ms` clipboard capability with Ghostty attached.
+- Test tmux copy mode, Neovim `"+y`/visual Ctrl-C, and Neovim inside tmux, both in
+  local Ubuntu Ghostty and from Mac Ghostty over SSH. Copy a distinct marker for
+  each case and paste into an app on the expected desktop: Ubuntu locally, Mac
+  over plain SSH with no forwarded/inherited desktop environment. Confirm that
+  the remote Ubuntu desktop clipboard remains unchanged in that SSH case.
+- Locally, test Neovim clipboard reads from another app using `"+p` and mapped
+  Ctrl-V. With the tmux provider, compare reads against its paste buffer; OSC 52
+  reads may prompt/time out. Test Ghostty paste separately.
+- Confirm ordinary Neovim y/d/p stay internal, pane-navigation and copy-mode keys
+  work, and reattachment between local/remote use selects the intended clipboard
+  after checking the pane environment and restarting Neovim.
+
+Record observed providers separately from successful desktop copy/paste tests.
+
 ## Activate and test
 
 1. Complete [activation](../README.md#3-activate) and

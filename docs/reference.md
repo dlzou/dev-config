@@ -33,7 +33,7 @@ and set Home Manager's `xdg.configHome` to the same directory. The default is
 
 The helper backs up conflicting files with a `.before-dev-config` suffix.
 If that backup already exists, preserve it under another name before retrying;
-do not force-overwrite it. Include Neovim, Yazi, Starship, Ghostty, user Nix
+do not force-overwrite it. Include Neovim, Yazi, Starship, Ghostty, tmux, user Nix
 settings, and affected shell files in your setup backups.
 
 ## Shell integration
@@ -100,6 +100,67 @@ configuration directory (normally `~/.config/yazi`).
 In Neovim's chooser, Enter selects a file for Neovim; Shift-O offers external
 openers. Over SSH, openers run remotely. To view remote HTML locally, transfer the
 files or serve them through an SSH port forward.
+
+### Tmux and clipboard
+
+Home Manager links [tmux.conf](../tmux/tmux.conf) to
+`~/.config/tmux/tmux.conf`. Check for an existing `~/.tmux.conf` before setup;
+merge or move it aside after backing it up so it does not take precedence.
+For a custom XDG directory, use that directory in the commands below.
+
+Apply the link with `./scripts/setup-home.sh --switch`.
+For an existing tmux server, reload with:
+
+```sh
+tmux source-file "${XDG_CONFIG_HOME:-$HOME/.config}/tmux/tmux.conf"
+```
+
+Open a new window afterward to get `TERM=tmux-256color`, or start a fresh session.
+Do not kill existing sessions to apply the configuration.
+
+| Keys | Action |
+| --- | --- |
+| Ctrl-B, then h / j / k / l | Select left / down / up / right pane; l replaces last-window |
+| Ctrl-B, then [ | Enter copy mode |
+| h / j / k / l; / or ? | Move or search in copy mode |
+| v / V / Ctrl-V | Select text / line / toggle rectangular selection |
+| y / q | Copy and exit / exit copy mode |
+| Ctrl-B, then ] | Paste tmux's latest buffer |
+
+Mouse support enables pane selection, resizing, and scrolling. Vi editing also
+applies to tmux's command prompts.
+
+Neovim uses automatic clipboard detection. These providers were observed on the
+current Ubuntu setup:
+
+| Environment | Provider | Copy destination |
+| --- | --- | --- |
+| Local Ubuntu, with or without tmux (`DISPLAY=:1`) | xclip | Ubuntu desktop |
+| SSH without tmux, display variables empty | OSC 52 | Computer running Ghostty |
+| SSH inside tmux, display variables empty | tmux | Tmux buffer and, with clipboard forwarding, computer running Ghostty |
+
+Local macOS normally uses pbcopy/pbpaste. Desktop clipboard tools remain
+host-managed: on a fresh Ubuntu desktop, install `xclip` for X11 or `wl-clipboard`
+for Wayland with `sudo apt install xclip` or `sudo apt install wl-clipboard` if
+needed. Detection also depends on `DISPLAY` or `WAYLAND_DISPLAY`; an installed
+executable alone does not select that desktop provider.
+
+Tmux copy mode uses OSC 52 with Ghostty. Its `set-clipboard on` also accepts
+clipboard writes from applications inside tmux. Ghostty permits clipboard writes
+by default; no passthrough setting is needed for this route.
+
+Ordinary Neovim registers remain internal. Explicit clipboard reads (`"+p` and
+the insert/command-line Ctrl-V mappings) depend on the provider: native tools read
+the desktop clipboard, tmux reads its paste buffer, and OSC 52 reads may prompt
+or time out. Ghostty's normal paste shortcut sends the local clipboard directly:
+Cmd-V on macOS or Ctrl-Shift-V on Ubuntu.
+
+Forwarded or inherited display variables can make desktop tools take precedence
+even over SSH. Existing tmux panes retain their environment when reattached;
+check those variables and the clipboard destination when switching between local
+and remote use, then restart Neovim after correcting the environment.
+Use `:echo provider#clipboard#Executable()` and `:checkhealth vim.provider` to
+inspect automatic selection.
 
 ## Development tools
 

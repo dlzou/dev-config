@@ -1,8 +1,8 @@
 # Validation status
 
-Last reviewed: 2026-09-22. These are observed results, not a guarantee for later
+Last reviewed: 2026-09-26. These are observed results, not a guarantee for later
 dependency updates. The compiler split is activated and verified on macOS;
-Broader Ubuntu runtime validation remains pending. The macOS Ghostty entry file
+broader Ubuntu runtime validation remains pending. The macOS Ghostty entry file
 and Yazi configuration link are present in the active Home Manager configuration.
 
 | Platform | Configuration evaluation | Build and activation | Runtime checks |
@@ -10,6 +10,28 @@ and Yazi configuration link are present in the active Home Manager configuration
 | Apple Silicon macOS | Passed | Build, activation, and repeat activation passed | Compiler, fresh Zsh, and editor checks passed |
 | x86_64 Ubuntu | Passed | Pending | Pending |
 | ARM64 Ubuntu | Passed | Pending | Pending |
+
+## Tmux and clipboard (2026-09-26)
+
+- All three Home Manager profiles and development shells evaluate; no Linux
+  clipboard packages are added to the shared tools. The macOS profile builds
+  without activation. Package and plugin lockfiles are unchanged.
+- Full Neovim startup on macOS selects pbcopy automatically, with no clipboard
+  override. Internal y/d/p operations and existing clipboard mappings pass checks.
+- An isolated tmux 3.7c server passes configuration, bindings, new-window TERM,
+  v/V/Ctrl-V/y selection, and paste-buffer checks. With Ghostty's bundled terminfo
+  supplied to the test terminal, `Ms` is available and captured output includes
+  the expected OSC 52 text from tmux copy mode.
+- The user reported successful SSH Neovim copying to the Mac clipboard. Provider
+  checks on the existing Ubuntu setup show xclip locally (inside/outside tmux,
+  `DISPLAY=:1`), OSC 52 over SSH outside tmux, and tmux over SSH inside tmux.
+  Both SSH cases had empty display variables despite xclip being installed.
+- The user confirmed tmux-256color definitions on both machines. Local desktop
+  copy/paste on macOS and Ubuntu, tmux copy-mode delivery to a real desktop, and
+  local/remote reattachment remain pending. Provider names and captured sequences
+  alone do not establish those results.
+- Lua/shell syntax, local documentation links, and Git whitespace checks pass.
+  No active sessions or desktop clipboard contents changed during agent testing.
 
 ## Markview previews (2026-09-22)
 

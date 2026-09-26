@@ -86,10 +86,11 @@ Build and switch use the existing lockfile; they do not upgrade dependencies.
 | Platforms and pinned Nix inputs | `flake.nix`, `flake.lock` | Run `--switch` |
 | Neovim and pinned plugins | `nvim/` | Restart Neovim; see the [editor guide](nvim/README.md) |
 | Starship prompt | `starship.toml` | Next prompt render |
+| Tmux controls and clipboard | `tmux/tmux.conf` | See [tmux reload instructions](docs/reference.md#tmux-and-clipboard) |
 | Yazi openers | `yazi/yazi.toml` | Restart Yazi |
 | Ghostty shared/platform settings | `ghostty/*.ghostty` | Reload Ghostty configuration |
 
-Neovim, Starship, and Yazi link directly to this writable checkout; Ghostty loads
+Neovim, Starship, Yazi, and tmux link directly to this writable checkout; Ghostty loads
 its settings from it. Edit generated configuration through `home.nix`.
 After moving the checkout, run `./scripts/setup-home.sh --switch` from its new
 location to refresh links and include paths.

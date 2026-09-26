@@ -101,6 +101,17 @@ remain off. Python uses Neovim's native indentation; LSP snippets use `vim.snipp
 Undo history persists across restarts in Neovim's standard undo directory.
 Surround, indentation detection, Git tools, and Startify sessions are enabled.
 
+## System clipboard
+
+Neovim automatically detects available clipboard tools. Run
+`:echo provider#clipboard#Executable()` to see the selected provider; use
+`:checkhealth vim.provider` for diagnostics. See the
+[clipboard reference](../docs/reference.md#tmux-and-clipboard) for local/SSH
+behavior and desktop prerequisites.
+
+Ordinary `y`, `d`, `p`, and `P` use internal registers. `"+y` / `"+p` and the
+Ctrl-C/Ctrl-V mappings above use the selected clipboard provider.
+
 ## Markdown preview
 
 Markdown opens as raw source by default. Enable
