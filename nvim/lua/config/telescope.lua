@@ -39,6 +39,7 @@ telescope.setup {
   },
   pickers = {
     buffers = flex({
+      path_display = { 'filename_first' },
       show_all_buffers = true,
       sort_lastused = true,
       mappings = { i = { ['<C-c>'] = 'delete_buffer' } },

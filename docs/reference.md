@@ -124,11 +124,12 @@ Do not kill existing sessions to apply the configuration.
 | Ctrl-B, then [ | Enter copy mode |
 | h / j / k / l; / or ? | Move or search in copy mode |
 | v / V / Ctrl-V | Select text / line / toggle rectangular selection |
-| y / q | Copy and exit / exit copy mode |
+| y / q | Copy and stay in copy mode / exit copy mode |
 | Ctrl-B, then ] | Paste tmux's latest buffer |
 
-Mouse support enables pane selection, resizing, and scrolling. Vi editing also
-applies to tmux's command prompts.
+Mouse support enables pane selection, resizing, and scrolling. Releasing a mouse
+selection keeps it highlighted in copy mode; press `y` to copy and clear the
+selection while staying at the same scroll position, or `q` to exit copy mode. Vi editing also applies to tmux's command prompts.
 
 Neovim uses automatic clipboard detection. These providers were observed on the
 current Ubuntu setup:
