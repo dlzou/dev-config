@@ -41,12 +41,15 @@ settings, and affected shell files in your setup backups.
 Home Manager generates `~/.config/dev-config/shell.sh`; the
 [one-time source block](../README.md#4-connect-the-shell) is added manually.
 It loads Home Manager session variables and initializes fzf and Starship for
-interactive Bash/Zsh. Keep the block last and source it only once.
+interactive Bash/Zsh. Keep the block last and source it only once per shell.
+Ubuntu desktops also need the [graphical login hook](ubuntu-validation.md#graphical-login)
+to expose the profile to applications launched outside a terminal.
 
 | Variable set or updated | Value / behavior | Purpose |
 | --- | --- | --- |
 | `DEV_CONFIG_PROFILE` | Home Manager's `config.home.profileDirectory` | Locate the active personal profile and verify tool selection |
 | `PATH` | Put `$DEV_CONFIG_PROFILE/bin` first outside a Nix development shell | Prefer managed personal tools |
+| `XDG_DATA_DIRS` (Linux) | Add Nix profile and system data directories; retain existing entries | Let desktop applications find Nix desktop entries |
 | `EDITOR`, `VISUAL` | `nvim` | Default editor for CLI applications |
 | `FZF_DEFAULT_OPTS` | `--height 40% --layout=reverse` | Shared picker defaults from `programs.fzf.defaultOptions` |
 | `TERMINFO_DIRS` (Linux) | Prepend profile `share/terminfo`, `/etc/terminfo`, `/lib/terminfo`, `/usr/share/terminfo`; retain existing entries | Let Nix terminal tools find system terminal definitions |
@@ -82,6 +85,33 @@ On macOS, if the CLI is not on PATH, use
 Files under `~/Library/Application Support/com.mitchellh.ghostty/` load after the
 XDG configuration and can override it. See [Ghostty configuration](https://ghostty.org/docs/config)
 if edits appear to have no effect.
+
+### Ubuntu default terminal and editor
+
+Home Manager installs `xdg-terminal-exec` on Linux and writes
+`xdg-terminals.list` and `ubuntu-xdg-terminals.list` in the XDG configuration
+directory, selecting `com.mitchellh.ghostty.desktop`. Ghostty must be installed
+separately. Applications using this terminal selector follow that preference;
+applications with an explicit terminal command may need their own setting.
+
+After [graphical login setup](ubuntu-validation.md#graphical-login) and a full
+logout/login, check `xdg-terminal-exec --print-id`: it should report Ghostty's
+desktop ID. Reuse the Nix-provided `nvim.desktop` entry for text and logs.
+Record the current defaults with `gio mime text/plain` and `gio mime text/x-log`,
+and back up existing `mimeapps.list` files under the XDG config and local
+applications directories before setting:
+
+```sh
+xdg-mime default nvim.desktop text/plain
+xdg-mime default nvim.desktop text/x-log
+```
+
+These are local preferences, not Home Manager-managed associations. To undo them,
+set each MIME type back to its recorded desktop ID, or restore the backup if it
+previously had no explicit default. Other file types keep their existing defaults.
+If the wrong editor or terminal opens, check the
+[desktop validation steps](ubuntu-validation.md#graphical-login) before changing
+launchers. macOS application associations are unchanged.
 
 ### Yazi file openers
 

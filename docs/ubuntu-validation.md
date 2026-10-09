@@ -47,6 +47,63 @@ After backing up the affected files outside the checkout:
 These are one-time local setup edits, not automatic activation changes. Later
 explicit project activation may intentionally put its tools first on PATH.
 
+## Graphical login
+
+A terminal's `.bashrc` hook does not update an already-running desktop session.
+After the [startup-chain inspection](#bash-startup-order), back up `.profile` and
+any login file you need to edit outside the checkout. At the end of `.profile`,
+add this hook for noninteractive login; interactive Bash uses its existing
+`.bashrc` hook:
+
+```sh
+case $- in
+  *i*) ;;
+  *)
+    if [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/dev-config/shell.sh" ]; then
+      . "${XDG_CONFIG_HOME:-$HOME/.config}/dev-config/shell.sh"
+    fi
+    ;;
+esac
+```
+
+If `.bash_profile` or `.bash_login` takes precedence, ensure that the active file
+sources `.profile` once, preserving existing initialization and avoiding cycles.
+Set a custom `XDG_CONFIG_HOME` before this hook if needed. The generated integration
+loads session variables in noninteractive shells without starting fzf or Starship.
+These remain manual setup edits; activation does not rewrite startup files.
+
+Activate the profile, then **fully log out of the desktop and log back in**.
+Opening another terminal or reattaching tmux does not refresh the desktop's
+environment. For GNOME, inspect both environments:
+
+```sh
+systemctl --user show-environment | grep -E '^(PATH|XDG_DATA_DIRS)='
+pid=$(pgrep -u "$(id -u)" -x gnome-shell | head -n 1)
+tr '\0' '\n' < "/proc/$pid/environ" | grep -E '^(PATH|XDG_DATA_DIRS)='
+```
+
+Confirm the configured personal profile's `bin` is first on PATH and its `share`
+is in `XDG_DATA_DIRS`; retain system and existing Flatpak/Snap data directories.
+Ubuntu 24.04's GDM X11 session sources `.profile`; GNOME 50's Wayland session uses
+the user's login shell. With Bash, the login-file precedence above therefore
+matters. Recheck the environment after an upgrade rather than assuming success.
+
+Follow the [terminal and editor association instructions](reference.md#ubuntu-default-terminal-and-editor),
+then verify:
+
+- `xdg-terminal-exec --print-id` reports `com.mitchellh.ghostty.desktop`.
+- `gio mime text/plain` and `gio mime text/x-log` select `nvim.desktop`.
+- Open a text file and a log file from the file manager, including a filename
+  containing spaces. Each opens Neovim in Ghostty; `:echo v:progpath` resolves to
+  the Nix Neovim, and `:echo exepath('basedpyright-langserver')` finds the profile's
+  language server.
+- Ctrl-Alt-T still opens Ghostty, and fresh interactive terminals pass
+  `./scripts/verify-tools.sh` with working fzf shortcuts and one Starship prompt.
+
+Keep old installations until these checks pass. Restore backed-up startup files
+and log out/in to undo the login hook; restore associations as described in the
+reference. Clipboard behavior remains covered separately below.
+
 ## Clipboard checks
 
 After applying the [tmux configuration](reference.md#tmux-and-clipboard), verify:

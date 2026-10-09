@@ -7,8 +7,12 @@ if [[ "${DEV_CONFIG_PROFILE:-}" != /* ]]; then
 fi
 
 failed=0
-for tool in nvim basedpyright basedpyright-langserver ruff clangd tree-sitter \
-  yazi ya rg fd fzf jq tmux starship uv git file make curl tar gzip unzip; do
+tools=(nvim basedpyright basedpyright-langserver ruff clangd tree-sitter
+  yazi ya rg fd fzf jq tmux starship uv git file make curl tar gzip unzip)
+if [[ "$(uname -s)" == Linux ]]; then
+  tools+=(xdg-terminal-exec)
+fi
+for tool in "${tools[@]}"; do
   if selected=$(command -v "$tool"); then
     printf '%-24s %s\n' "$tool" "$selected"
     case "$selected" in

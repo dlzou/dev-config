@@ -1,6 +1,6 @@
 # Validation status
 
-Last reviewed: 2026-09-26. These are observed results, not a guarantee for later
+Last reviewed: 2026-10-05. These are observed results, not a guarantee for later
 dependency updates. The compiler split is activated and verified on macOS;
 broader Ubuntu runtime validation remains pending. The macOS Ghostty entry file
 and Yazi configuration link are present in the active Home Manager configuration.
@@ -10,6 +10,23 @@ and Yazi configuration link are present in the active Home Manager configuration
 | Apple Silicon macOS | Passed | Build, activation, and repeat activation passed | Compiler, fresh Zsh, and editor checks passed |
 | x86_64 Ubuntu | Passed | Pending | Pending |
 | ARM64 Ubuntu | Passed | Pending | Pending |
+
+## Ubuntu desktop terminal selection (2026-10-05)
+
+- User-provided diagnostics show the existing Ubuntu X11 desktop lacked Nix
+  profile entries in PATH and `XDG_DATA_DIRS`; text/log associations selected the
+  Snap Neovim desktop entry. Ctrl-Alt-T already opened Ghostty.
+- All three Home Manager profiles and development shells evaluate. Both Linux
+  profiles include `xdg-terminal-exec` and generate generic/Ubuntu preference
+  files selecting Ghostty. macOS has neither addition and builds without activation.
+- Verifier fixtures pass for present, missing, and shadowed Linux terminal helpers;
+  macOS does not require the helper. The documented login guard sources the hook
+  in noninteractive Bash and skips it in interactive Bash.
+- Generated shell scripts and documented shell blocks pass syntax checks; local
+  documentation links/anchors and Git whitespace checks pass. Lockfiles are unchanged.
+- No activation or local shell/MIME edits were performed. Ubuntu builds, refreshed
+  graphical-session paths, file-manager launches, and Wayland upgrade behavior
+  remain pending; follow [graphical login setup](ubuntu-validation.md#graphical-login).
 
 ## Tmux and clipboard (2026-09-26)
 

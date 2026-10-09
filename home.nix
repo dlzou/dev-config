@@ -36,6 +36,13 @@ in {
   programs.zsh.enable = false;
 
   xdg.enable = true;
+  xdg.terminal-exec = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+    enable = true;
+    settings = {
+      default = [ "com.mitchellh.ghostty.desktop" ];
+      ubuntu = [ "com.mitchellh.ghostty.desktop" ];
+    };
+  };
   xdg.configFile."nvim".source = config.lib.file.mkOutOfStoreSymlink "${checkout}/nvim";
   xdg.configFile."starship.toml".source =
     config.lib.file.mkOutOfStoreSymlink "${checkout}/starship.toml";
@@ -52,7 +59,8 @@ in {
     experimental-features = nix-command flakes
   '';
 
-  # Source this once at the end of the existing interactive shell configuration.
+  # Source from interactive shell startup and Ubuntu's noninteractive login profile.
+  # Only interactive shells initialize fzf and Starship below.
   # Absolute paths keep fzf and Starship hooks matched to the selected packages.
   xdg.configFile."dev-config/shell.sh".text = ''
     # Expose the configured profile so verification uses the same location.

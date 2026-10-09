@@ -56,7 +56,8 @@ fi
 
 Replace old fzf/Starship initialization with this block. Transfer custom fzf
 options to `home.nix` before removing old exports. On Ubuntu, check
-[Bash startup ordering](docs/ubuntu-validation.md#bash-startup-order).
+[Bash startup ordering](docs/ubuntu-validation.md#bash-startup-order) and, for a
+desktop session, [graphical login setup](docs/ubuntu-validation.md#graphical-login).
 
 Open a fresh terminal and verify:
 

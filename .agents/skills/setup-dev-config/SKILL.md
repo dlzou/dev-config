@@ -56,6 +56,9 @@ steps; do not add another approval checkpoint for each step.
    inspect login-file precedence and move existing personal PATH additions before
    `.bashrc` is sourced. Preserve `PROMPT_COMMAND` and work initialization; do not
    create duplicate sourcing. Test both login and non-login interactive Bash.
+   For Ubuntu desktops, also follow [graphical login setup](../../../docs/ubuntu-validation.md#graphical-login)
+   and the linked terminal/editor association checks; a fresh terminal alone does
+   not refresh the desktop environment.
 4. Verify tools in a fresh interactive terminal outside a project Nix shell using
    `./scripts/verify-tools.sh` and `type -a` for migrated commands. Investigate
    aliases and earlier PATH entries if old binaries still win. Agent-injected
