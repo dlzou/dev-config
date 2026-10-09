@@ -87,7 +87,6 @@ return {
       exclude = { buftypes = { 'terminal' }, filetypes = { 'help', 'lazy', 'startify' } },
     },
   },
-  'tpope/vim-surround',
   'tpope/vim-sleuth',
   {
     'nvim-telescope/telescope.nvim',

@@ -20,8 +20,4 @@ for lhs, rhs in pairs({
   map('i', lhs, rhs)
 end
 map('t', '<C-g>', '<C-\\><C-n>', { desc = 'Leave terminal input mode' })
--- Preserve the old backslash prefix alongside Space.
-map('n', '\\', '<Space>', { remap = true })
-
-normal('<leader>n', '<cmd>nohlsearch<CR>', 'Clear search highlight')
 normal('<leader>t', '<cmd>terminal<CR>', 'Terminal')

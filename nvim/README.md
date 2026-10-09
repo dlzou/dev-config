@@ -38,6 +38,30 @@ shortcuts. Completion and autopairs load when you first enter insert mode;
 press Tab to request completion. Markview initializes after the colorscheme and
 defers rendering internally. Use `:Lazy profile` to inspect plugin timings.
 
+## VS Code
+
+The VSCode Neovim extension sets `vim.g.vscode`; this config detects it automatically.
+Both environments share Space leader, the backslash alias, Space n to clear search
+highlights, the 750 ms mapping timeout, and `vim-surround` editing operations.
+
+Inside VS Code, language extensions provide completion and diagnostics, and VS Code
+owns appearance, indentation, file navigation, Git views, and Markdown preview.
+Standalone Neovim plugins and their setup hooks are skipped. lazy.nvim retains their
+declarations so they are not offered for cleanup merely because VS Code is running.
+VS Code's own indentation/bracket guides may still be visible.
+
+| Normal-mode keys in VS Code | Action |
+| --- | --- |
+| Space ff | Quick Open |
+| Space fg | Search across files |
+| Space gs | Source Control |
+
+[Shared settings](lua/config/shared.lua) and [VS Code mappings](lua/config/vscode.lua)
+are separate from the standalone options/keymaps. Shared plugins live in
+[lua/plugins-shared.lua](lua/plugins-shared.lua); the remaining plugins stay in
+[lua/plugins.lua](lua/plugins.lua). The sections below describe standalone Neovim.
+Restart the extension's Neovim instance (or reload the VS Code window) after changes.
+
 ## Language support
 
 **Python:** basedpyright provides completion, navigation, signature help, and type

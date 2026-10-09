@@ -9,8 +9,13 @@ if not vim.uv.fs_stat(path) then
   end
 end
 vim.opt.rtp:prepend(path)
-require('lazy').setup(require('plugins'), {
-  defaults = { lazy = false },
+require('lazy').setup({
+  { import = 'plugins-shared' },
+  { import = 'plugins' },
+}, {
+  -- Keep all specs known to Lazy so VS Code cannot mark standalone plugins unused.
+  -- Shared plugins opt in with cond = true.
+  defaults = { lazy = false, cond = function() return not vim.g.vscode end },
   rocks = { enabled = false },
   checker = { enabled = false },
   change_detection = { notify = false },
