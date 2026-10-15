@@ -1,8 +1,8 @@
 local telescope = require('telescope')
 local actions = require('telescope.actions')
 
-local function flex(options)
-  return vim.tbl_deep_extend('force', {
+telescope.setup {
+  defaults = {
     layout_strategy = 'flex',
     sorting_strategy = 'ascending',
     layout_config = {
@@ -12,11 +12,6 @@ local function flex(options)
       flip_columns = 120,
       flip_lines = 40,
     },
-  }, options or {})
-end
-
-telescope.setup {
-  defaults = {
     mappings = {
       i = {
         ['<Esc>'] = actions.close,
@@ -38,17 +33,13 @@ telescope.setup {
     },
   },
   pickers = {
-    buffers = flex({
+    buffers = {
       path_display = { 'filename_first' },
       show_all_buffers = true,
       sort_lastused = true,
       mappings = { i = { ['<C-c>'] = 'delete_buffer' } },
-    }),
-    commands = flex(),
-    find_files = flex({ find_command = { 'rg', '--files', '--hidden', '-g', '!.git/' } }),
-    live_grep = flex(),
-    lsp_definitions = flex(),
-    lsp_workspace_symbols = flex(),
+    },
+    find_files = { find_command = { 'rg', '--files', '--hidden', '-g', '!.git/' } },
   },
   extensions = {
     fzf = {

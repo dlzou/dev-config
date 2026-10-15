@@ -185,11 +185,13 @@ current-file comparison, using ordinary Neovim splits.
 
 ## Telescope layout
 
-Configured pickers use `flex` at 80% width and height, with the prompt at the top.
-The layout switches between horizontal and vertical based on available space.
-Edit the shared helper in `lua/config/telescope.lua` to change dimensions or switch
-thresholds. In the buffers picker, Ctrl-C deletes the selected buffer; Ctrl-G or
-Esc closes the picker.
+All pickers inherit `flex` at 80% width and height, with the prompt above the results.
+Below 120 columns, the layout switches to vertical when at least 40 lines are
+available; otherwise it stays horizontal. Edit `defaults` in
+[lua/config/telescope.lua](lua/config/telescope.lua) to change dimensions or switch
+thresholds. Explicit per-call layouts or themes can override these defaults.
+In the buffers picker, Ctrl-C deletes the selected buffer; Ctrl-G or Esc closes
+the picker.
 
 ## Yazi file browser
 
