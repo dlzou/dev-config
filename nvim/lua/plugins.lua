@@ -193,11 +193,19 @@ return {
     config = function() require('config.lsp') end,
   },
   {
+    'lervag/vimtex',
+    lazy = false,
+    init = function()
+      vim.g.vimtex_view_method = 'sioyek'
+      vim.g.vimtex_compiler_method = 'latexmk'
+    end,
+  },
+  {
     'hrsh7th/nvim-cmp',
     lazy = true,
     event = 'InsertEnter',
     dependencies = {
-      'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'micangl/cmp-vimtex',
       { 'windwp/nvim-autopairs', opts = {} },
     },
     config = function() require('config.cmp') end,

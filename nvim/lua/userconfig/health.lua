@@ -7,10 +7,10 @@ function M.check()
       and 'Install Xcode Command Line Tools with xcode-select --install, then check cc and c++ in a fresh terminal.'
     or 'On Ubuntu, run sudo apt install build-essential, then check cc and c++ in a fresh terminal.'
   health.start('Neovim configuration dependencies')
-  if vim.fn.has('nvim-0.12') == 1 then
+  if vim.fn.has('nvim-0.12.4') == 1 then
     health.ok('Neovim ' .. tostring(vim.version()))
   else
-    health.error('Neovim 0.12.0 or later is required.', { setup })
+    health.error('Neovim 0.12.4 or later is required.', { setup })
   end
 
   local dependencies = {

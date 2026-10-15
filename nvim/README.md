@@ -1,6 +1,6 @@
 # Neovim configuration
 
-Neovim 0.12+ with Python/C++ language support.
+Neovim 0.12.4+ with Python/C++ language support and optional LaTeX tooling.
 Configuration is Lua; lazy.nvim manages plugins pinned in `lazy-lock.json`.
 
 ## Setup
@@ -36,7 +36,9 @@ Telescope uses `rg`; missing `fd` produces only a health-check warning.
 Telescope, Diffview, Trouble, Undotree, and Yazi load on their commands or
 shortcuts. Completion and autopairs load when you first enter insert mode;
 press Tab to request completion. Markview initializes after the colorscheme and
-defers rendering internally. Use `:Lazy profile` to inspect plugin timings.
+defers rendering internally. VimTeX loads at startup for inverse-search callbacks;
+its TeX editing features initialize in TeX buffers. Use `:Lazy profile` to inspect
+plugin timings.
 
 ## VS Code
 
@@ -85,6 +87,57 @@ and [Ruff's Neovim setup](https://docs.astral.sh/ruff/editors/setup/).
 for accurate include paths and build flags. Language servers do not install your
 project's dependencies.
 
+## LaTeX writing
+
+Enter the optional environment from your document directory, then start Neovim:
+
+```sh
+nix develop ~/dev-config#latex
+nvim main.tex
+```
+
+This supplies TeX Live, latexmk, Biber, and Sioyek without installing them in the
+personal profile. Adjust the checkout path if needed. Space ll starts continuous
+compilation; subsequent saves rebuild the PDF. The first successful compilation
+opens Sioyek in a separate window. Space lv jumps from the source to the PDF.
+The viewer reloads changed PDFs; press F4 to enable SyncTeX mode, then right-click
+text to jump back to Neovim. Launch the viewer through VimTeX to configure that
+callback. For standalone
+reading, run `sioyek main.pdf` from the shell.
+
+These are VimTeX's buffer-local normal-mode mappings in TeX files:
+
+| Keys | Action |
+| --- | --- |
+| Space ll | Start/toggle continuous compilation |
+| Space lv | Open PDF / forward search |
+| Space le | Compilation errors |
+| Space lt / lT | Open / toggle table of contents |
+| Space lk | Stop compilation |
+| Space li | Project information |
+
+Tab requests VimTeX completion for commands, references, and citations through
+nvim-cmp. Existing completion navigation and acceptance keys apply. TeX uses
+VimTeX's syntax and indentation; compiling is manual until you start the watcher.
+Python/C++ LSP shortcuts use the same prefix in their own buffers.
+
+VimTeX detects the main document; for ambiguous multi-file projects, put
+`% !TeX root = ../main.tex` in a child file. Select an engine with a main-file
+comment such as `% !TeX program = xelatex`, or configure latexmk in the project's
+`.latexmkrc`. Space li shows the detected root/compiler. Run `:checkhealth vimtex`
+inside the shell for diagnostics.
+
+The shell uses `texliveMedium` plus latexmk, Biber, extra LaTeX packages, and
+recommended fonts. Add missing TeX packages to `texliveMedium.withPackages` in
+[flake.nix](../flake.nix), then re-enter the shell. Existing MacTeX/system TeX
+remains available outside it; inside, Nix tools take precedence. Start a new
+Neovim process after entering the shell. Custom `TEXINPUTS`, `TEXMFHOME`, and
+`.latexmkrc` settings can affect both installations. Outside the shell, compilation
+and viewing require tools available on the host PATH.
+
+This workflow targets a local desktop. Ubuntu's Nix-packaged viewer may need
+host graphics integration; see [validation status](../docs/rollout-status.md).
+
 ## Appearance
 
 The theme is `tokyonight-moon`. Change its setup and the Lualine theme in
@@ -105,7 +158,7 @@ Incomplete mapped sequences time out after 750 ms. Completion stays manual.
 | Space dv / dq | Diffview: review changes / close view |
 | Space dh / dH | Diffview: current-file history / repository history |
 | Ctrl-G in Diffview (normal mode) | Close the diff view from a diff buffer, file list, or history panel |
-| Space ld / ll / ln / lr / ls | Definitions / diagnostics / rename / references / workspace symbols |
+| Space ld / ll / ln / lr / ls with an LSP attached | Definitions / diagnostics / rename / references / workspace symbols |
 | Space la | LSP code actions |
 | Space lf / li / lx | Python: Ruff format / organize imports / fix all |
 | Space ss / sl / sc / sd / st | Save / load / close / delete session / Startify |

@@ -33,4 +33,7 @@ cmp.setup({
   },
   sources = cmp.config.sources({ { name = 'nvim_lsp' } }, { { name = 'buffer' } }),
 })
+cmp.setup.filetype('tex', {
+  sources = cmp.config.sources({ { name = 'vimtex' } }, { { name = 'buffer' } }),
+})
 cmp.event:on('confirm_done', require('nvim-autopairs.completion.cmp').on_confirm_done())

@@ -198,7 +198,7 @@ inspect automatic selection.
 ## Development tools
 
 [Nix packages](../nix/packages.nix) supply personal executables; lazy.nvim manages
-Neovim plugins. Minimum versions are Neovim 0.12.0, tree-sitter CLI 0.26.1, and
+Neovim plugins. Minimum versions are Neovim 0.12.4, tree-sitter CLI 0.26.1, and
 Ruff 0.5.3. See the [Neovim guide](../nvim/README.md#first-launch-and-updates) for
 initial plugin/parser installation and health checks.
 
@@ -220,6 +220,13 @@ Keep project-specific native libraries/toolchains in their own development
 environments. System packages, drivers, CUDA, Docker, system Python, and vendor
 utilities retain their existing management. Git identity, Conda, credentials,
 and work initialization stay local; Homebrew can coexist for Mac apps and exceptions.
+
+### LaTeX projects
+
+The optional `nix develop ~/dev-config#latex` shell supplies TeX Live, latexmk,
+Biber, and Sioyek. It adds no C/C++ compiler and needs no Home Manager activation.
+See the [Neovim LaTeX workflow](../nvim/README.md#latex-writing) for compilation,
+PDF synchronization, package selection, and coexistence with host TeX installations.
 
 ### Python projects
 

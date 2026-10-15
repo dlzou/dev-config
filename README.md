@@ -84,6 +84,7 @@ Build and switch use the existing lockfile; they do not upgrade dependencies.
 | --- | --- | --- |
 | Packages | `nix/packages.nix` | Run `--switch` |
 | Links, fzf options, shell integration | `home.nix` | Run `--switch`; open a fresh terminal for shell changes |
+| Optional development shells | `flake.nix` | Re-enter `nix develop` (or `nix develop .#latex`) |
 | Platforms and pinned Nix inputs | `flake.nix`, `flake.lock` | Run `--switch` |
 | Neovim and pinned plugins | `nvim/` | Restart Neovim; see the [editor guide](nvim/README.md) |
 | Starship prompt | `starship.toml` | Next prompt render |

@@ -1,6 +1,6 @@
 # Validation status
 
-Last reviewed: 2026-10-05. These are observed results, not a guarantee for later
+Last reviewed: 2026-10-15. These are observed results, not a guarantee for later
 dependency updates. The compiler split is activated and verified on macOS;
 broader Ubuntu runtime validation remains pending. The macOS Ghostty entry file
 and Yazi configuration link are present in the active Home Manager configuration.
@@ -10,6 +10,36 @@ and Yazi configuration link are present in the active Home Manager configuration
 | Apple Silicon macOS | Passed | Build, activation, and repeat activation passed | Compiler, fresh Zsh, and editor checks passed |
 | x86_64 Ubuntu | Passed | Pending | Pending |
 | ARM64 Ubuntu | Passed | Pending | Pending |
+
+## LaTeX writing (2026-10-15)
+
+- All three Home Manager profiles and both development shells on all supported
+  platforms evaluate. The macOS profile and LaTeX shell build without activation.
+  The LaTeX shell selects Nix TeX/Sioyek and retains `/usr/bin/cc`; the default
+  shell and personal package selections are unchanged.
+- The pinned macOS Sioyek package placed shaders/default settings in
+  `Contents/MacOS`, while its executable expects `Contents/Resources`. A macOS-only
+  installation-path override in `flake.nix` rebuilds the same pinned source with
+  those resources present. Linux uses the original package.
+- Temporary projects with spaces in their paths pass PDF generation, Biber
+  bibliography, references, XeLaTeX/LuaLaTeX with fontspec, and SyncTeX lookups.
+  VimTeX starts/stops continuous compilation, rebuilds on save, and detects a
+  child file's root directive. Manual command/citation/reference completion,
+  acceptance/cancellation, buffer-local mappings, and health checks pass.
+- An isolated Sioyek instance renders the PDF, follows forward search, reloads
+  changed text, and calls back into the correct Neovim source line. Viewer-owned
+  framebuffer screenshots were inspected before/after the change. These checks
+  used Sioyek's command interface and headless Neovim; physical F4/right-click
+  interaction and terminal focus behavior remain pending.
+- Python/C++ still attach their existing servers and retain their completion
+  sources and mappings. VS Code skips VimTeX/cmp-vimtex and their setup hooks.
+- Seven warm headless samples inside the shell give median startup times of
+  40.7 → 43.2 ms for an empty editor and 68.4 → 111.3 ms for a TeX file. These
+  measurements do not explain the previously observed intermittent cold-start delay.
+- Only VimTeX and cmp-vimtex were added to the plugin lock; existing revisions and
+  `flake.lock` are unchanged. Lua/shell syntax, local links/anchors, and whitespace
+  checks pass. Ubuntu builds, GUI/graphics compatibility, and runtime tests remain
+  pending. See the [LaTeX workflow](../nvim/README.md#latex-writing).
 
 ## Ubuntu desktop terminal selection (2026-10-05)
 

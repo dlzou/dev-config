@@ -47,10 +47,31 @@
         home-manager = home-manager.packages.${system}.home-manager;
       });
 
-      # Optional trial environment; everyday tools are installed by Home Manager.
+      # Optional environments; everyday tools are installed by Home Manager.
       devShells = forEachSystem (system:
-        let pkgs = nixpkgs.legacyPackages.${system};
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          # At this pin, the macOS app expects resources in Contents/Resources,
+          # while the package installs them beside the executable.
+          sioyek = if pkgs.stdenv.hostPlatform.isDarwin then
+            pkgs.sioyek.overrideAttrs (old: {
+              postInstall = old.postInstall + ''
+                app_contents="$out/Applications/sioyek.app/Contents"
+                cp -R "$app_contents/MacOS/shaders" "$app_contents/Resources/"
+                cp "$app_contents/MacOS/"*.config "$app_contents/MacOS/tutorial.pdf" \
+                  "$app_contents/Resources/"
+              '';
+            })
+          else pkgs.sioyek;
         in {
+          latex = pkgs.mkShellNoCC {
+            packages = (import ./nix/packages.nix { inherit pkgs; }) ++ [
+              sioyek
+              (pkgs.texliveMedium.withPackages (ps: with ps; [
+                latexmk biber collection-latexextra collection-fontsrecommended
+              ]))
+            ];
+          };
           default = pkgs.mkShell {
             # The personal profile uses the system compiler; this optional shell owns its toolchain.
             packages = (import ./nix/packages.nix { inherit pkgs; }) ++ [ pkgs.stdenv.cc ];
