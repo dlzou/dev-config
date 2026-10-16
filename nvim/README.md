@@ -128,7 +128,8 @@ comment such as `% !TeX program = xelatex`, or configure latexmk in the project'
 inside the shell for diagnostics.
 
 The shell uses `texliveMedium` plus latexmk, Biber, extra LaTeX packages, and
-recommended fonts. Add missing TeX packages to `texliveMedium.withPackages` in
+recommended fonts, including Font Awesome. Add missing TeX packages to
+`texliveMedium.withPackages` in
 [flake.nix](../flake.nix), then re-enter the shell. Existing MacTeX/system TeX
 remains available outside it; inside, Nix tools take precedence. Start a new
 Neovim process after entering the shell. Custom `TEXINPUTS`, `TEXMFHOME`, and

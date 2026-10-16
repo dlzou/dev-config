@@ -69,6 +69,7 @@
               sioyek
               (pkgs.texliveMedium.withPackages (ps: with ps; [
                 latexmk biber collection-latexextra collection-fontsrecommended
+                fontawesome
               ]))
             ];
           };
