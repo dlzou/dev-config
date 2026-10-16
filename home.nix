@@ -63,6 +63,11 @@ in {
   # Only interactive shells initialize fzf and Starship below.
   # Absolute paths keep fzf and Starship hooks matched to the selected packages.
   xdg.configFile."dev-config/shell.sh".text = ''
+    # Recover a missing installer shell hook without changing project-shell PATH.
+    if [ -z "''${IN_NIX_SHELL:-}" ] && ! command -v nix >/dev/null 2>&1 &&
+       [ -r /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+      . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+    fi
     # Expose the configured profile so verification uses the same location.
     export DEV_CONFIG_PROFILE=${lib.escapeShellArg config.home.profileDirectory}
     if [ -r "$DEV_CONFIG_PROFILE/etc/profile.d/hm-session-vars.sh" ]; then

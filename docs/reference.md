@@ -40,8 +40,14 @@ settings, and affected shell files in your setup backups.
 
 Home Manager generates `~/.config/dev-config/shell.sh`; the
 [one-time source block](../README.md#4-connect-the-shell) is added manually.
-It loads Home Manager session variables and initializes fzf and Starship for
+Outside Nix development shells, it first loads the installed Nix daemon's
+initialization script if `nix` is missing from PATH and the script is readable.
+It then loads Home Manager session variables and initializes fzf and Starship for
 interactive Bash/Zsh. Keep the block last and source it only once per shell.
+Changes to this generated integration require `scripts/setup-home.sh --switch`
+and a fresh terminal. The helper has its own Nix initialization fallback, so it
+can apply this fix before the shell integration is available; Nix must already
+be installed.
 Ubuntu desktops also need the [graphical login hook](ubuntu-validation.md#graphical-login)
 to expose the profile to applications launched outside a terminal.
 
@@ -54,8 +60,8 @@ to expose the profile to applications launched outside a terminal.
 | `FZF_DEFAULT_OPTS` | `--height 40% --layout=reverse` | Shared picker defaults from `programs.fzf.defaultOptions` |
 | `TERMINFO_DIRS` (Linux) | Prepend profile `share/terminfo`, `/etc/terminfo`, `/lib/terminfo`, `/usr/share/terminfo`; retain existing entries | Let Nix terminal tools find system terminal definitions |
 
-`IN_NIX_SHELL` is an input, not set here: a nonempty value skips the PATH prepend
-so the project shell's tools stay first. `TERMINFO` is left unchanged.
+`IN_NIX_SHELL` is an input, not set here: a nonempty value skips Nix initialization
+and the PATH prepend so the project shell's tools stay first. `TERMINFO` is left unchanged.
 `XDG_CONFIG_HOME` selects the source-block location as described in
 [setup details](#setup-details).
 
